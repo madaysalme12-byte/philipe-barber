@@ -1,0 +1,13 @@
+PHILIPE BARBER — PANEL ADMINISTRATIVO Y WHATSAPP
+
+ARCHIVOS
+- index.html: página para clientes. La solicitud de cita abre WhatsApp con el texto preparado. Incluye un acceso flotante a WhatsApp.
+- admin.html: página administrativa independiente a pantalla completa. No se cierra al pulsar fuera; el botón “Volver a clientes” lleva a index.html.
+
+CONFIGURAR WHATSAPP
+1. Abre admin.html e inicia sesión.
+2. En la sección de datos/configuración del negocio, escribe el número de WhatsApp de la barbería con indicativo internacional. Para Colombia, empieza por 57 seguido del número, sin +, espacios ni guiones (ejemplo de formato: 573001234567; no uses este ejemplo como número real).
+3. Guarda los cambios y abre index.html para probar el botón de WhatsApp y el formulario de citas.
+
+IMPORTANTE
+Esta entrega se basa en el respaldo HTML disponible. La información de administración se guarda en localStorage del navegador y no se comparte automáticamente entre dispositivos. El formulario abre WhatsApp; el cliente debe pulsar Enviar. Este paquete no modifica ni publica el sitio en Netlify y no contiene las funciones de servidor/base de datos del despliegue mencionado anteriormente. La contraseña de demostración que figura en el código no es autenticación segura para producción; antes de publicar el panel se debe implementar autenticación del lado del servidor y almacenamiento compartido.
