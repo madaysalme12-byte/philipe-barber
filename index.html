@@ -1105,3 +1105,15 @@ const waFloat=document.getElementById('whatsappFloat');if(waFloat){const waDigit
  showPage(location.hash.slice(1)||'inicio',false);
 })();
 </script></body></html>
+
+/* En computadora mostrar cada fotografía completa, sin recortes */
+@media(min-width:801px){
+ #galeria #galleryGrid>.gallery-tile{
+  background:#0d0d0d!important;
+ }
+ #galeria #galleryGrid>.gallery-tile img{
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+ }
+}
