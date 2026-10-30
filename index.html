@@ -440,38 +440,38 @@ Contacto directo por WhatsApp */
 }
 
 
-/* Galería móvil: las tres fotografías se mantienen verticales y visibles */
-@media(max-width:800px){
-  #galeria .gallery-grid{
+/* Ajuste definitivo móvil: tres tarjetas verticales grandes */
+@media screen and (max-width:800px){
+  #galeria #galleryGrid{
+    display:grid!important;
     grid-template-columns:minmax(0,1fr)!important;
-    grid-template-rows:auto!important;
+    grid-template-rows:none!important;
     grid-auto-rows:auto!important;
-    gap:14px!important;
-  }
-  #galeria .gallery-tile.main-photo{
-    grid-column:1!important;
-    grid-row:auto!important;
-    aspect-ratio:4/5!important;
-    width:100%!important;
-  }
-  #galeria .gallery-tile.side-photo,
-  #galeria .gallery-tile.side-photo:nth-of-type(2),
-  #galeria .gallery-tile.side-photo:nth-of-type(3){
-    grid-column:1!important;
-    grid-row:auto!important;
-    aspect-ratio:4/5!important;
-    width:100%!important;
-    min-height:0!important;
     height:auto!important;
-    background-size:cover!important;
+    gap:16px!important;
+  }
+  #galeria #galleryGrid > .gallery-tile{
+    grid-column:1!important;
+    grid-row:auto!important;
+    display:flex!important;
+    width:100%!important;
+    height:clamp(320px, 105vw, 440px)!important;
+    min-height:320px!important;
+    max-height:440px!important;
+    aspect-ratio:auto!important;
+    overflow:hidden!important;
+  }
+  #galeria #galleryGrid > .gallery-tile img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
   }
 }
-@media(max-width:420px){
-  #galeria .gallery-grid{gap:12px!important}
-  #galeria .gallery-tile.side-photo,
-  #galeria .gallery-tile.side-photo:nth-of-type(2),
-  #galeria .gallery-tile.side-photo:nth-of-type(3){
-    aspect-ratio:4/5!important;
+@media screen and (max-width:420px){
+  #galeria #galleryGrid{gap:13px!important}
+  #galeria #galleryGrid > .gallery-tile{
+    height:clamp(310px, 108vw, 400px)!important;
+    min-height:310px!important;
   }
 }
 
