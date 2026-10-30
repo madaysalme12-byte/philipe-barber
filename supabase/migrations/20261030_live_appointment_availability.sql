@@ -8,7 +8,7 @@ BEGIN
   IF EXISTS (
     SELECT 1
     FROM public.citas
-    WHERE lower(coalesce(estado, '')) NOT IN ('cancelada', 'cancelado')
+    WHERE lower(coalesce(estado, '')) NOT IN ('cancelada', 'cancelado', 'eliminada')
     GROUP BY fecha, hora
     HAVING count(*) > 1
   ) THEN
@@ -16,6 +16,7 @@ BEGIN
   END IF;
 END $$;
 
+DROP INDEX IF EXISTS public.citas_fecha_hora_activas_uidx;
 CREATE UNIQUE INDEX IF NOT EXISTS citas_fecha_hora_activas_uidx
 ON public.citas (fecha, hora)
 WHERE lower(coalesce(estado, '')) NOT IN ('cancelada', 'cancelado');
