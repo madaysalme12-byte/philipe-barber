@@ -519,39 +519,63 @@ Contacto directo por WhatsApp */
   box-shadow:none!important;
 }
 
-/* Pantalla de bienvenida cinematográfica PHILIPE BARBER CLUB */
+/* Bienvenida de alto impacto: PHILIPE BARBER CLUB */
 #pbWelcomeIntro{
-  position:fixed;inset:0;z-index:99999;display:grid;place-items:center;
-  padding:24px;background:
-    radial-gradient(ellipse at 50% 42%,#c7a45b25 0%,transparent 48%),
-    linear-gradient(145deg,#080808 0%,#1b1b1b 52%,#090909 100%);
+  position:fixed;inset:0;z-index:999999;display:grid;place-items:center;
+  overflow:hidden;padding:26px;background:
+    radial-gradient(ellipse at 50% 48%,#c7a45b38 0%,#c7a45b0b 32%,transparent 58%),
+    linear-gradient(135deg,#050505 0%,#191919 48%,#070707 100%);
   color:#f7f3e9;text-align:center;pointer-events:none;
-  animation:pbIntroExit .85s cubic-bezier(.7,0,.3,1) 2.75s forwards;
+  opacity:1;visibility:visible;
+  animation:pbIntroExit .9s cubic-bezier(.7,0,.3,1) 4.8s forwards;
 }
-#pbWelcomeIntro:before,#pbWelcomeIntro:after{
-  content:"";position:absolute;left:50%;width:min(74vw,520px);height:1px;
-  background:linear-gradient(90deg,transparent,#c7a45b,transparent);
-  transform:translateX(-50%);opacity:.8;
+#pbWelcomeIntro:before{
+  content:"";position:absolute;width:min(92vw,760px);height:min(92vw,760px);
+  border:1px solid #c7a45b38;border-radius:50%;
+  box-shadow:0 0 0 22px #c7a45b08,0 0 0 54px #c7a45b06,0 0 100px #c7a45b16;
+  animation:pbHalo 4.5s ease-out both;
 }
-#pbWelcomeIntro:before{top:calc(50% - 104px)}
-#pbWelcomeIntro:after{top:calc(50% + 104px)}
-.pb-intro-content{position:relative;z-index:1;animation:pbIntroText 1s cubic-bezier(.2,.75,.25,1) both}
-.pb-intro-kicker{display:block;margin-bottom:24px;color:#e4cf9a;font-size:clamp(10px,1.8vw,13px);font-weight:700;letter-spacing:clamp(4px,1vw,8px);text-transform:uppercase}
-.pb-intro-name{margin:0;font-family:Impact,'Arial Narrow',sans-serif;font-size:clamp(54px,11vw,116px);line-height:.9;letter-spacing:clamp(1px,.4vw,5px);text-transform:uppercase;color:#f6e8c3;text-shadow:0 3px 0 #725a2d,0 8px 24px #000,0 0 34px #c7a45b35}
-.pb-intro-name span{display:block;margin-top:12px;font-size:.48em;letter-spacing:clamp(6px,1.5vw,15px);color:#c7a45b}
-.pb-intro-tagline{margin:34px 0 0;color:#c8c0b1;font-size:10px;letter-spacing:4px;text-transform:uppercase}
-@keyframes pbIntroText{from{opacity:0;transform:translateY(20px) scale(.97);filter:blur(7px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+#pbWelcomeIntro:after{
+  content:"";position:absolute;left:50%;top:50%;width:min(90vw,720px);height:2px;
+  transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#8d6d32,#f7e5b5,#8d6d32,transparent);
+  box-shadow:0 0 18px #c7a45b80;
+}
+.pb-intro-content{position:relative;z-index:1;width:100%;animation:pbIntroText 1.15s cubic-bezier(.16,1,.3,1) both}
+.pb-intro-mark{width:54px;height:54px;margin:0 auto 25px;display:grid;place-items:center;
+  border:1px solid #c7a45b;border-radius:50%;color:#e8d19a;font-size:25px;
+  box-shadow:0 0 25px #c7a45b30,inset 0 0 18px #c7a45b16;animation:pbMark 1.2s .15s both}
+.pb-intro-kicker{display:block;margin-bottom:21px;color:#f1dfb2;font-size:clamp(11px,1.8vw,14px);
+  font-weight:800;letter-spacing:clamp(4px,1.2vw,9px);text-transform:uppercase}
+.pb-intro-name{margin:0;font-family:Impact,'Arial Narrow',sans-serif;
+  font-size:clamp(56px,12vw,132px);line-height:.86;letter-spacing:clamp(1px,.5vw,6px);
+  text-transform:uppercase;color:#fff3d2;
+  text-shadow:0 2px 0 #b18b45,0 5px 0 #634a20,0 12px 24px #000,0 0 42px #c7a45b65}
+.pb-intro-name span{display:block;margin-top:17px;font-size:.46em;line-height:1.05;
+  letter-spacing:clamp(7px,1.7vw,19px);padding-left:.15em;color:#d3b46e;
+  text-shadow:0 2px 0 #5a431c,0 8px 25px #000,0 0 30px #c7a45b50}
+.pb-intro-rule{width:min(230px,55vw);height:1px;margin:29px auto 0;
+  background:linear-gradient(90deg,transparent,#e4c77f,transparent)}
+.pb-intro-tagline{margin:20px 0 0;color:#ded6c5;font-size:clamp(9px,1.4vw,11px);
+  font-weight:700;letter-spacing:clamp(3px,.8vw,6px);text-transform:uppercase}
+@keyframes pbIntroText{0%{opacity:0;transform:translateY(34px) scale(.92);filter:blur(12px);letter-spacing:10px}65%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes pbMark{from{opacity:0;transform:scale(.4) rotate(-90deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes pbHalo{from{transform:scale(.72);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes pbIntroExit{to{opacity:0;visibility:hidden}}
-@media(prefers-reduced-motion:reduce){#pbWelcomeIntro{animation-duration:.01ms;animation-delay:0ms}.pb-intro-content{animation-duration:.01ms}}
+@media(prefers-reduced-motion:reduce){
+  #pbWelcomeIntro{animation-duration:.5s;animation-delay:4s}
+  #pbWelcomeIntro:before,.pb-intro-content,.pb-intro-mark{animation:none}
+}
 
 </style>
 </head>
 <body>
 <div id="pbWelcomeIntro" aria-label="Bienvenido a PHILIPE BARBER CLUB" role="status">
   <div class="pb-intro-content">
-    <span class="pb-intro-kicker">Bienvenido a</span>
+    <div class="pb-intro-mark" aria-hidden="true">✂</div>
+    <span class="pb-intro-kicker">BIENVENIDO A</span>
     <h1 class="pb-intro-name">PHILIPE<span>BARBER CLUB</span></h1>
-    <p class="pb-intro-tagline">Estilo · Precisión · Actitud</p>
+    <div class="pb-intro-rule"></div>
+    <p class="pb-intro-tagline">ESTILO · PRECISIÓN · ACTITUD</p>
   </div>
 </div>
 <div id="app">
