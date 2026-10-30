@@ -19,7 +19,7 @@ END $$;
 DROP INDEX IF EXISTS public.citas_fecha_hora_activas_uidx;
 CREATE UNIQUE INDEX IF NOT EXISTS citas_fecha_hora_activas_uidx
 ON public.citas (fecha, hora)
-WHERE lower(coalesce(estado, '')) NOT IN ('cancelada', 'cancelado');
+WHERE lower(coalesce(estado, '')) NOT IN ('cancelada', 'cancelado', 'eliminada');
 
 -- RPC pública que solo devuelve fecha y hora ocupadas (nunca datos personales).
 CREATE OR REPLACE FUNCTION public.horarios_ocupados(p_fecha date)
@@ -32,7 +32,7 @@ AS $function$
   SELECT c.fecha::date, left(c.hora::text, 5)
   FROM public.citas AS c
   WHERE c.fecha::date = p_fecha
-    AND lower(coalesce(c.estado, '')) NOT IN ('cancelada', 'cancelado')
+    AND lower(coalesce(c.estado, '')) NOT IN ('cancelada', 'cancelado', 'eliminada')
   ORDER BY c.hora;
 $function$;
 
