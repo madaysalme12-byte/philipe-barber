@@ -887,6 +887,38 @@ main>.page-view#contacto.active{display:flex!important;flex-direction:column;jus
   height:auto!important;
  }
 }
+
+/* Corrección definitiva de galería en computadora */
+@media screen and (min-width:801px){
+ #galeria #galleryGrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-rows:auto!important;
+  align-items:start!important;
+  gap:16px!important;
+ }
+ #galeria #galleryGrid>.gallery-tile,
+ #galeria #galleryGrid>.gallery-tile.main-photo,
+ #galeria #galleryGrid>.gallery-tile.side-photo{
+  grid-column:auto!important;
+  grid-row:auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:3/4!important;
+  overflow:hidden!important;
+ }
+ #galeria #galleryGrid>.gallery-tile img{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:none!important;
+ }
+}
 </style>
 </head>
 <body>
@@ -1106,14 +1138,3 @@ const waFloat=document.getElementById('whatsappFloat');if(waFloat){const waDigit
 })();
 </script></body></html>
 
-/* En computadora mostrar cada fotografía completa, sin recortes */
-@media(min-width:801px){
- #galeria #galleryGrid>.gallery-tile{
-  background:#0d0d0d!important;
- }
- #galeria #galleryGrid>.gallery-tile img{
-  object-fit:contain!important;
-  object-position:center center!important;
-  transform:none!important;
- }
-}
