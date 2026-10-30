@@ -703,6 +703,35 @@ main > section:not(.hero)::after,
   }
 }
 
+
+/* Anulación de máxima prioridad para el patrón dorado del fondo de galería */
+section#galeria#galeria,
+section#galeria#galeria::before,
+section#galeria#galeria::after {
+  background: #0b0b0b !important;
+  background-image: none !important;
+}
+section#galeria#galeria::before,
+section#galeria#galeria::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+}
+@media (min-width: 801px) {
+  section#galeria#galeria,
+  section#galeria#galeria::before,
+  section#galeria#galeria::after {
+    background: #0b0b0b !important;
+    background-image: none !important;
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+  }
+  section#galeria#galeria::before,
+  section#galeria#galeria::after {
+    content: none !important;
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body>
