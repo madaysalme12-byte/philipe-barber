@@ -815,17 +815,23 @@ async function loadBookedTimes(date){
  if(error)throw error;
  return (data||[]).map(x=>String(x.hora||'').slice(0,5)).filter(Boolean);
 }
+function getBogotaNow(){
+ const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bogota',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+ const part=k=>parts.find(p=>p.type===k)?.value||'';
+ return {date:part('year')+'-'+part('month')+'-'+part('day'),minutes:Number(part('hour'))*60+Number(part('minute'))};
+}
 async function refreshPublicSlots(){
  const date=document.getElementById('apptDate').value,sel=document.getElementById('apptTime');
  const previous=sel.value;sel.innerHTML='';sel.add(new Option(date?'Consultando disponibilidad...':'Primero selecciona una fecha',''));
  if(!date)return;
  try{
   const booked=await loadBookedTimes(date);
-  const end=closingHour(date)*60,slots=[];
+  const now=getBogotaNow(),end=closingHour(date)*60,slots=[];
   for(let m=540;m+50<=end;m+=50){
    const value=String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
    const conflict=booked.some(t=>Math.abs(toMinutes(t)-m)<50);
-   if(!conflict)slots.push(value);
+   const alreadyPassed=date===now.date&&m<=now.minutes;
+   if(!conflict&&!alreadyPassed)slots.push(value);
   }
   sel.innerHTML='';
   if(!slots.length){sel.add(new Option('No hay horarios disponibles para esta fecha',''));document.getElementById('formMessage').textContent='No quedan horarios libres para esta fecha. Elige otro día.';return;}
@@ -846,14 +852,14 @@ function subscribePublicAvailability(){
   .on('postgres_changes',{event:'*',schema:'public',table:'citas'},()=>refreshPublicSlots())
   .subscribe(status=>{if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('No se pudo conectar la actualización en tiempo real de las citas.');});
 }
-subscribePublicAvailability();document.getElementById('adminDate').addEventListener('change',()=>fillTimeOptions(document.getElementById('adminTime'),document.getElementById('adminDate').value));
+subscribePublicAvailability();setInterval(()=>{const selected=document.getElementById('apptDate').value;if(selected===getBogotaNow().date)refreshPublicSlots();},60000);document.getElementById('adminDate').addEventListener('change',()=>fillTimeOptions(document.getElementById('adminTime'),document.getElementById('adminDate').value));
 document.getElementById('bookingForm').addEventListener('submit',async e=>{
  e.preventDefault();
  const phone=String(business.phone||'').replace(/\\D/g,'');
  const service=services[Number(document.getElementById('serviceSelect').value)];
  const data={name:document.getElementById('clientName').value.trim(),phone:document.getElementById('clientPhone').value.trim(),service:service?.name||'',date:document.getElementById('apptDate').value,time:document.getElementById('apptTime').value,notes:document.getElementById('notes').value.trim()};
  const status=document.getElementById('formMessage');
- if(!data.date||!data.time||toMinutes(data.time)<540||toMinutes(data.time)>=closingHour(data.date)*60){alert('Selecciona una fecha y una hora dentro del horario de atención.');return;}
+ const now=getBogotaNow();if(!data.date||!data.time||toMinutes(data.time)<540||toMinutes(data.time)>=closingHour(data.date)*60||(data.date===now.date&&toMinutes(data.time)<=now.minutes)){alert('Selecciona una fecha y una hora futura dentro del horario de atención.');await refreshPublicSlots();return;}
  const waWindow=phone.length>=10?window.open('about:blank','_blank'):null;
  status.textContent='Verificando que el horario siga disponible…';
  try{
