@@ -234,6 +234,46 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
  .admin-modal-brand p{margin-top:7px;letter-spacing:2px}
 }
 
+
+/* Título principal visible dentro del escritorio administrativo, después del acceso */
+.admin-dashboard-brand{
+  padding:24px 26px 22px;
+  margin:0 0 18px;
+  text-align:center;
+  background:radial-gradient(ellipse at 50% 0%,#c7a45b25,transparent 68%),linear-gradient(135deg,#171717,#202020 55%,#111);
+  border:1px solid #c7a45b55;
+  border-radius:4px;
+  box-shadow:inset 0 1px 0 #fff2,0 12px 30px #0005;
+}
+.admin-dashboard-brand h1{
+  margin:0;
+  font-family:'Cormorant Garamond','Playfair Display',Georgia,serif;
+  font-size:clamp(32px,5vw,54px);
+  line-height:1;
+  letter-spacing:2px;
+  font-weight:900;
+  text-transform:uppercase;
+  background:linear-gradient(180deg,#fff5d5 0%,#d8c18b 20%,#8c7138 43%,#f4e3b0 52%,#8b6b2e 68%,#2b2417 100%);
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  -webkit-text-stroke:.6px #17130b;
+  filter:drop-shadow(0 2px 0 #665026) drop-shadow(0 6px 12px #0009);
+}
+.admin-dashboard-brand p{
+  margin:10px 0 0;
+  color:#e0bd72;
+  font-size:clamp(12px,1.7vw,15px);
+  font-weight:800;
+  letter-spacing:4px;
+  text-transform:uppercase;
+}
+@media(max-width:520px){
+ .admin-dashboard-brand{padding:20px 12px 18px}
+ .admin-dashboard-brand h1{font-size:clamp(27px,8vw,38px);letter-spacing:1px}
+ .admin-dashboard-brand p{letter-spacing:2.5px}
+}
+
 </style>
 </head>
 <body><div id="app">
@@ -246,7 +286,7 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
 <section class="section booking" id="citas"><div><div class="eyebrow">Tu próximo look empieza aquí</div><h2>Tu estilo marca la diferencia. <span>Agenda tu cita</span></h2><p class="section-intro">Envíanos tu solicitud por WhatsApp y confirmaremos la disponibilidad de tu horario.</p><div class="info-list"><div class="info-row"><span>Horario</span><strong id="publicHours">Lunes a sábado · 9:00 a. m. – 8:00 p. m. | Domingo · 9:00 a. m. – 6:00 p. m.</strong></div><div class="info-row"><span>Ubicación</span><strong id="publicAddress">Dirección por configurar</strong></div><div class="info-row"><span>Contacto</span><strong id="publicPhone">WhatsApp por configurar</strong></div><div class="info-row"><span>Redes sociales</span><strong id="publicSocials">Configurar desde administración</strong></div></div></div><form class="booking-card" id="bookingForm"><h3>Agenda tu cita</h3><div class="field"><label for="clientName">Nombre</label><input id="clientName" required placeholder="¿Cómo te llamas?"></div><div class="field"><label for="clientPhone">Tu número de contacto</label><input id="clientPhone" required inputmode="tel" placeholder="Número de celular"></div><div class="field"><label for="serviceSelect">Servicio</label><select id="serviceSelect" required></select></div><div class="field"><label for="apptDate">Fecha preferida</label><input type="date" id="apptDate" required></div><div class="field"><label for="apptTime">Hora preferida</label><select id="apptTime" required><option value="">Primero selecciona una fecha</option></select></div><div class="field"><label for="notes">Nota (opcional)</label><textarea id="notes" placeholder="Cuéntanos algún detalle que debamos saber"></textarea></div><button class="btn" type="submit" style="width:100%">Continuar por WhatsApp ↗</button><div id="formMessage" class="form-note" role="status"></div></form></section>
 </main><footer class="footer"><div id="contacto"><strong>PHILIPE BARBER</strong> · Tu estilo marca la diferencia</div><div>ESTILO · PRECISIÓN · ACTITUD</div><button class="admin-entry" id="openAdmin">Administración (vista de prueba)</button></footer>
 </div>
-<div class="modal-backdrop" id="adminBackdrop"><div class="modal"><div class="modal-head"><div class="admin-modal-brand"><h2>PHILIPE BARBER CLUB</h2><p>Panel de administración</p></div><button class="close" id="closeAdmin" aria-label="Cerrar">×</button></div><div id="adminLogin" style="max-width:420px;margin:24px auto"><h3>Acceso privado</h3><p class="form-note">Ingresa tus credenciales para administrar la barbería.</p><form id="adminLoginForm"><div class="field"><label for="adminUsername">Correo administrador</label><input id="adminUsername" type="email" autocomplete="username" required value="madaysalme12@gmail.com" placeholder="correo@ejemplo.com"></div><div class="field"><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Contraseña"></div><p id="loginError" role="alert" style="color:#a12b20;font-size:12px;display:none">Usuario o contraseña incorrectos.</p><button class="btn" type="submit" style="width:100%">Ingresar</button></form></div><div id="adminContent" hidden><div class="notice"><strong>Conexión:</strong> las citas se consultan y administran desde Supabase. Los cambios en servicios, datos de la página y galería todavía se guardan solo en este navegador.</div><div class="admin-tabs"><button class="tab active" data-tab="agendar">Agendar</button><button class="tab" data-tab="citasAdmin">Citas</button><button class="tab" data-tab="servicesAdmin">Servicios y precios</button><button class="tab" data-tab="businessAdmin">Datos de la página</button><button class="tab" data-tab="photosAdmin">Galería</button><button class="tab" data-tab="commentsAdmin">Comentarios</button></div>
+<div class="modal-backdrop" id="adminBackdrop"><div class="modal"><div class="modal-head"><div class="admin-modal-brand"><h2>PHILIPE BARBER CLUB</h2><p>Panel de administración</p></div><button class="close" id="closeAdmin" aria-label="Cerrar">×</button></div><div id="adminLogin" style="max-width:420px;margin:24px auto"><h3>Acceso privado</h3><p class="form-note">Ingresa tus credenciales para administrar la barbería.</p><form id="adminLoginForm"><div class="field"><label for="adminUsername">Correo administrador</label><input id="adminUsername" type="email" autocomplete="username" required value="madaysalme12@gmail.com" placeholder="correo@ejemplo.com"></div><div class="field"><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Contraseña"></div><p id="loginError" role="alert" style="color:#a12b20;font-size:12px;display:none">Usuario o contraseña incorrectos.</p><button class="btn" type="submit" style="width:100%">Ingresar</button></form></div><div id="adminContent" hidden><div class="admin-dashboard-brand"><h1>PHILIPE BARBER CLUB</h1><p>Panel de administración</p></div><div class="notice"><strong>Conexión:</strong> las citas se consultan y administran desde Supabase. Los cambios en servicios, datos de la página y galería todavía se guardan solo en este navegador.</div><div class="admin-tabs"><button class="tab active" data-tab="agendar">Agendar</button><button class="tab" data-tab="citasAdmin">Citas</button><button class="tab" data-tab="servicesAdmin">Servicios y precios</button><button class="tab" data-tab="businessAdmin">Datos de la página</button><button class="tab" data-tab="photosAdmin">Galería</button><button class="tab" data-tab="commentsAdmin">Comentarios</button></div>
 <div class="admin-panel active" id="agendar"><h3>Agendar una cita</h3><form id="adminApptForm" class="admin-form"><div class="field"><label>Cliente</label><input id="adminClient" required placeholder="Nombre del cliente"></div><div class="field"><label>Teléfono</label><input id="adminClientPhone" placeholder="Celular"></div><div class="field"><label>Servicio</label><select id="adminService"></select></div><div class="field"><label>Precio (COP)</label><input id="adminPrice" type="number" min="0" required></div><div class="field"><label>Fecha</label><input id="adminDate" type="date" required></div><div class="field"><label>Hora</label><select id="adminTime" required></select></div><div class="field wide"><label>Nota</label><input id="adminNote" placeholder="Opcional"></div><div class="wide"><button class="btn" type="submit">Guardar cita</button></div></form></div><div class="admin-panel" id="citasAdmin"><h3>Citas</h3><div id="appointmentNotice" class="notice" role="status" aria-live="polite">Activa las notificaciones para recibir un aviso del navegador cuando llegue una cita nueva.</div><button type="button" class="btn outline" id="enableAppointmentNotifications" style="margin:0 0 14px">Activar notificaciones</button><div id="apptList" style="margin-top:18px"><div class="empty">Todavía no hay citas registradas.</div></div></div>
 <div class="admin-panel" id="servicesAdmin"><h3>Agregar servicio o cambiar precios</h3><form id="serviceForm" class="admin-form"><div class="field"><label>Nombre del servicio</label><input id="newServiceName" required placeholder="Ej. Corte clásico"></div><div class="field"><label>Precio (COP)</label><input id="newServicePrice" type="number" min="0" required placeholder="Ej. 25000"></div><div class="field wide"><label>Descripción</label><input id="newServiceDesc" placeholder="Breve descripción"></div><div class="wide"><button class="btn" type="submit">Agregar servicio</button></div></form><p class="form-note">Puedes cambiar el nombre, la descripción y el precio de cada servicio, o eliminarlo. Los cambios se reflejan en la página pública y en el selector de citas.</p><div id="adminServicesList" style="margin-top:18px"></div></div>
 <div class="admin-panel" id="businessAdmin"><h3>Configura toda la información visible</h3><form id="businessForm" class="admin-form"><div class="field"><label>Nombre de la barbería</label><input id="brandInput" placeholder="PHILIPE BARBER"></div><div class="field"><label>Eslogan</label><input id="sloganInput" placeholder="Tu estilo marca la diferencia. Agenda tu cita"></div><div class="field wide"><label>Horario</label><input id="hoursInput" placeholder="Ej. Lunes a sábado · 9:00 a. m. – 7:00 p. m."></div><div class="field"><label>Dirección</label><input id="addressInput" placeholder="Dirección de la barbería"></div><div class="field"><label>WhatsApp con indicativo</label><input id="phoneInput" placeholder="Ej. 57XXXXXXXXXX"></div><div class="field"><label>Instagram (usuario o enlace)</label><input id="instagramInput" placeholder="@philipebarber o enlace"></div><div class="field"><label>Facebook (usuario o enlace)</label><input id="facebookInput" placeholder="Enlace de Facebook"></div><div class="field"><label>TikTok (usuario o enlace)</label><input id="tiktokInput" placeholder="@philipebarber o enlace"></div><div class="field wide"><label>Texto de presentación (opcional)</label><input id="descriptionInput" placeholder="Texto breve bajo el eslogan"></div><div class="wide"><button class="btn" id="saveBusinessButton" type="button">Guardar información</button><span id="businessSaveStatus" class="form-note" role="status" aria-live="polite"></span></div></form><p class="form-note">Completa estos datos antes de publicar la página.</p></div>
