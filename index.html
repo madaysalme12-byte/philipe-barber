@@ -961,6 +961,35 @@ main>.page-view#contacto.active{display:flex!important;flex-direction:column;jus
   transform:none!important;
  }
 }
+
+/* Un solo desplazamiento vertical para toda la página, en móvil y escritorio */
+html,body{
+  height:auto!important;
+  min-height:100%;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+}
+#app{
+  height:auto!important;
+  min-height:100vh;
+  min-height:100dvh;
+  overflow:visible!important;
+}
+main{
+  flex:1 0 auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
+main>.page-view{
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
+.site-bottom{
+  flex:0 0 auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
 </style>
 </head>
 <body>
