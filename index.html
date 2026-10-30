@@ -808,8 +808,75 @@ function removeAppt(id){if(confirm('¿Eliminar definitivamente esta cita? Esta a
 function editAppt(id){const a=appointments.find(x=>x.id===id);if(!a)return;const client=prompt('Nombre del cliente:',a.client);if(client===null)return;const date=prompt('Fecha (AAAA-MM-DD):',a.date);if(date===null)return;const time=prompt('Hora (HH:MM):',a.time);if(time===null)return;if(appointments.some(x=>x.id!==id&&x.status!=='Cancelada'&&x.date===date&&Math.abs(toMinutes(x.time)-toMinutes(time))<50)){alert('Ese horario se cruza con otra cita. Elige otro.');return;}a.client=client.trim();a.date=date;a.time=time;a.displayTime=time;persist();renderAppointments();}
 function toMinutes(t){const p=String(t).split(':').map(Number);return (p[0]||0)*60+(p[1]||0)}
 document.querySelectorAll('input[type="date"]').forEach(el=>el.addEventListener('click',()=>{try{if(typeof el.showPicker==='function')el.showPicker();}catch(e){}}));
-document.getElementById('serviceSelect').addEventListener('change',()=>{});document.getElementById('adminService').addEventListener('change',updatePrice);document.getElementById('apptDate').addEventListener('change',()=>fillTimeOptions(document.getElementById('apptTime'),document.getElementById('apptDate').value));document.getElementById('adminDate').addEventListener('change',()=>fillTimeOptions(document.getElementById('adminTime'),document.getElementById('adminDate').value));
-document.getElementById('bookingForm').addEventListener('submit',async e=>{e.preventDefault();const phone=String(business.phone||'').replace(/\D/g,'');const service=services[Number(document.getElementById('serviceSelect').value)];const data={name:document.getElementById('clientName').value.trim(),phone:document.getElementById('clientPhone').value.trim(),service:service?.name||'',date:document.getElementById('apptDate').value,time:document.getElementById('apptTime').value,notes:document.getElementById('notes').value.trim()};if(!data.date||!data.time||toMinutes(data.time)<540||toMinutes(data.time)>=closingHour(data.date)*60){alert('Selecciona una fecha y una hora dentro del horario de atención. De lunes a sábado atendemos hasta las 8:00 p. m. y los domingos hasta las 6:00 p. m.');return;}const msg=`Hola, PHILIPE BARBER. Quiero solicitar una cita.\nNombre: ${data.name}\nMi celular: ${data.phone}\nServicio: ${data.service}\nFecha: ${data.date}\nHora preferida: ${displayTime(data.time)}\nNota: ${data.notes||'Ninguna'}\n¿Me confirman disponibilidad, por favor?`;const status=document.getElementById('formMessage');const waWindow=phone.length>=10?window.open('about:blank','_blank'):null;status.textContent='Guardando tu solicitud…';try{const {error}=await supabaseClient.from('citas').insert({cliente:data.name,telefono:data.phone,servicio:data.service,fecha:data.date,hora:data.time,notas:data.notes||null,estado:'pendiente'});if(error)throw error;status.textContent='Solicitud guardada. Se abrirá WhatsApp para enviarla a la barbería.';if(phone.length>=10){if(waWindow){waWindow.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);}else{window.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);}}else{if(waWindow)waWindow.close();alert('La solicitud quedó guardada, pero falta configurar el número de WhatsApp de la barbería.\n\n'+msg);}}catch(err){if(waWindow)waWindow.close();console.error('Supabase booking insert failed:',err);status.textContent='No pudimos guardar la cita en la base de datos. Inténtalo de nuevo en unos segundos.';alert('No se pudo guardar la solicitud en Supabase. No enviaremos una cita que no quedó registrada. Revisa la conexión y vuelve a intentarlo.');}});
+document.getElementById('serviceSelect').addEventListener('change',()=>{});document.getElementById('adminService').addEventListener('change',updatePrice);document.getElementById('apptDate').addEventListener('change',()=>refreshPublicSlots());
+async function loadBookedTimes(date){
+ if(!date)return [];
+ const {data,error}=await supabaseClient.rpc('horarios_ocupados',{p_fecha:date});
+ if(error)throw error;
+ return (data||[]).map(x=>String(x.hora||'').slice(0,5)).filter(Boolean);
+}
+async function refreshPublicSlots(){
+ const date=document.getElementById('apptDate').value,sel=document.getElementById('apptTime');
+ const previous=sel.value;sel.innerHTML='';sel.add(new Option(date?'Consultando disponibilidad...':'Primero selecciona una fecha',''));
+ if(!date)return;
+ try{
+  const booked=await loadBookedTimes(date);
+  const end=closingHour(date)*60,slots=[];
+  for(let m=540;m+50<=end;m+=50){
+   const value=String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+   const conflict=booked.some(t=>Math.abs(toMinutes(t)-m)<50);
+   if(!conflict)slots.push(value);
+  }
+  sel.innerHTML='';
+  if(!slots.length){sel.add(new Option('No hay horarios disponibles para esta fecha',''));document.getElementById('formMessage').textContent='No quedan horarios libres para esta fecha. Elige otro día.';return;}
+  sel.add(new Option('Selecciona una hora',''));
+  slots.forEach(t=>sel.add(new Option(displayTime(t),t)));
+  if(slots.includes(previous))sel.value=previous;
+  document.getElementById('formMessage').textContent='';
+ }catch(err){
+  console.error('No se pudo consultar la disponibilidad:',err);
+  sel.innerHTML='';sel.add(new Option('Disponibilidad no disponible',''));
+  document.getElementById('formMessage').textContent='No pudimos consultar los horarios. Inténtalo nuevamente en unos segundos.';
+ }
+}
+let publicAppointmentsChannel=null;
+function subscribePublicAvailability(){
+ if(publicAppointmentsChannel)return;
+ publicAppointmentsChannel=supabaseClient.channel('pb-public-availability')
+  .on('postgres_changes',{event:'*',schema:'public',table:'citas'},()=>refreshPublicSlots())
+  .subscribe(status=>{if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('No se pudo conectar la actualización en tiempo real de las citas.');});
+}
+subscribePublicAvailability();document.getElementById('adminDate').addEventListener('change',()=>fillTimeOptions(document.getElementById('adminTime'),document.getElementById('adminDate').value));
+document.getElementById('bookingForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const phone=String(business.phone||'').replace(/\\D/g,'');
+ const service=services[Number(document.getElementById('serviceSelect').value)];
+ const data={name:document.getElementById('clientName').value.trim(),phone:document.getElementById('clientPhone').value.trim(),service:service?.name||'',date:document.getElementById('apptDate').value,time:document.getElementById('apptTime').value,notes:document.getElementById('notes').value.trim()};
+ const status=document.getElementById('formMessage');
+ if(!data.date||!data.time||toMinutes(data.time)<540||toMinutes(data.time)>=closingHour(data.date)*60){alert('Selecciona una fecha y una hora dentro del horario de atención.');return;}
+ const waWindow=phone.length>=10?window.open('about:blank','_blank'):null;
+ status.textContent='Verificando que el horario siga disponible…';
+ try{
+  const booked=await loadBookedTimes(data.date);
+  if(booked.some(t=>Math.abs(toMinutes(t)-toMinutes(data.time))<50)){
+   if(waWindow)waWindow.close();
+   status.textContent='Ese horario acaba de ocuparse. Selecciona otro horario disponible.';
+   await refreshPublicSlots();return;
+  }
+  const {error}=await supabaseClient.from('citas').insert({cliente:data.name,telefono:data.phone,servicio:data.service,fecha:data.date,hora:data.time,notas:data.notes||null,estado:'pendiente'});
+  if(error)throw error;
+  status.textContent='¡Tu solicitud quedó registrada! Se abrirá WhatsApp para confirmar los detalles.';
+  const msg=`Hola, PHILIPE BARBER. Quiero solicitar una cita.\\nNombre: ${data.name}\\nMi celular: ${data.phone}\\nServicio: ${data.service}\\nFecha: ${data.date}\\nHora preferida: ${displayTime(data.time)}\\nNota: ${data.notes||'Ninguna'}\\n¿Me confirman mi cita, por favor?`;
+  if(phone.length>=10){if(waWindow){waWindow.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);}else{window.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);}}
+  else{if(waWindow)waWindow.close();alert('La solicitud quedó guardada, pero falta configurar el número de WhatsApp de la barbería.\\n\\n'+msg);}
+  await refreshPublicSlots();
+ }catch(err){
+  if(waWindow)waWindow.close();
+  console.error('Supabase booking insert failed:',err);
+  status.textContent='No se pudo guardar la cita. Es posible que ese horario se haya ocupado; actualiza la disponibilidad e inténtalo de nuevo.';
+  alert('No pudimos guardar la cita. Actualiza los horarios e inténtalo nuevamente. '+(err?.message||''));
+ }
+});
 const whatsappFloat = document.getElementById('whatsappFloat');
 
 if (whatsappFloat) {
@@ -835,7 +902,7 @@ async function uploadSponsorImage(file){const status=document.getElementById('sp
 document.getElementById('sponsorImageInput')?.addEventListener('change',async e=>{const files=Array.from(e.target.files||[]);for(const file of files){try{await uploadSponsorImage(file);}catch(err){document.getElementById('sponsorUploadStatus').textContent='Error: '+(err?.message||'Inténtalo nuevamente.');break;}}e.target.value='';});
 function renderPublicSponsors(){const strip=document.getElementById('partnershipStrip'),box=document.getElementById('partnershipImages');if(!strip||!box)return;const items=photos.filter(p=>{try{return JSON.parse(p.nombre||'').__pbSponsor===1;}catch(e){return false;}});box.innerHTML='';items.forEach(p=>{const img=document.createElement('img');img.src=p.src;img.alt='';img.loading='lazy';box.appendChild(img);});strip.hidden=!items.length;}
 function renderPhotos(){const gallery=document.getElementById('galleryGrid');if(!gallery)return;gallery.innerHTML='';const main=photos.find(p=>p.categoria==='principal');const rotating=photos.filter(p=>['mosaico1','mosaico2','galeria'].includes(p.categoria));sideRotationIndex=0;const makeTile=(p,cls,label)=>{const tile=document.createElement('div');tile.className='gallery-tile '+cls;if(p){const img=document.createElement('img');img.src=p.src;img.alt='Trabajo realizado en PHILIPE BARBER';img.loading='lazy';applyPhotoFraming(img,p);tile.appendChild(img);}else{tile.innerHTML='<strong>'+label+'</strong>';}gallery.appendChild(tile);return tile;};makeTile(main,'main-photo','Foto principal');const sideA=makeTile(rotating[0],'side-photo','Próximamente');const sideB=makeTile(rotating[1],'side-photo','Más trabajos');if(window.pbSideRotation)clearInterval(window.pbSideRotation);if(rotating.length>2){window.pbSideRotation=setInterval(()=>{sideRotationIndex=(sideRotationIndex+2)%rotating.length;[sideA,sideB].forEach((tile,i)=>{const p=rotating[(sideRotationIndex+i)%rotating.length];let img=tile.querySelector('img');if(!img){img=document.createElement('img');tile.appendChild(img);}img.src=p.src;img.alt='Trabajo realizado en PHILIPE BARBER';applyPhotoFraming(img,p);tile.classList.remove('photo-changing');void tile.offsetWidth;tile.classList.add('photo-changing');});},4000);}}
-async function loadPublicBusinessConfig(){try{const {data,error}=await supabaseClient.from('configuracion_barberia').select('datos').eq('id',1).maybeSingle();if(error)throw error;if(data?.datos&&typeof data.datos==='object'){business={...business,...data.datos};renderBusiness();persist();const wa=document.getElementById('whatsappFloat');const digits=String(business.phone||'').replace(/\D/g,'');if(wa&&digits.length>=10)wa.href='https://wa.me/'+digits+'?text='+encodeURIComponent('Hola, PHILIPE BARBER. Quisiera información sobre sus servicios y disponibilidad.');}}catch(err){console.error('No se pudo cargar la configuración pública:',err);}}loadPublicComments();loadPublicBusinessConfig();const today=new Date();const iso=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);document.getElementById('apptDate').min=iso;document.getElementById('adminDate').min=iso;document.getElementById('adminDate').value=iso;timeSlots();renderServices();renderBusiness();renderAppointments();loadSupabasePhotos();
+async function loadPublicBusinessConfig(){try{const {data,error}=await supabaseClient.from('configuracion_barberia').select('datos').eq('id',1).maybeSingle();if(error)throw error;if(data?.datos&&typeof data.datos==='object'){business={...business,...data.datos};renderBusiness();persist();const wa=document.getElementById('whatsappFloat');const digits=String(business.phone||'').replace(/\D/g,'');if(wa&&digits.length>=10)wa.href='https://wa.me/'+digits+'?text='+encodeURIComponent('Hola, PHILIPE BARBER. Quisiera información sobre sus servicios y disponibilidad.');}}catch(err){console.error('No se pudo cargar la configuración pública:',err);}}loadPublicComments();loadPublicBusinessConfig();const today=new Date();const iso=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);document.getElementById('apptDate').min=iso;document.getElementById('adminDate').min=iso;document.getElementById('adminDate').value=iso;timeSlots();renderServices();renderBusiness();renderAppointments();refreshPublicSlots();loadSupabasePhotos();
 // Mantener la galería pública sincronizada con los encuadres guardados desde el panel.
 window.addEventListener('focus',()=>loadSupabasePhotos());
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadSupabasePhotos();});
