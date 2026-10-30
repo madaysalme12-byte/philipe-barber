@@ -518,9 +518,43 @@ Contacto directo por WhatsApp */
   outline:0!important;
   box-shadow:none!important;
 }
+
+/* Pantalla de bienvenida cinematográfica PHILIPE BARBER CLUB */
+#pbWelcomeIntro{
+  position:fixed;inset:0;z-index:99999;display:grid;place-items:center;
+  padding:24px;background:
+    radial-gradient(ellipse at 50% 42%,#c7a45b25 0%,transparent 48%),
+    linear-gradient(145deg,#080808 0%,#1b1b1b 52%,#090909 100%);
+  color:#f7f3e9;text-align:center;pointer-events:none;
+  animation:pbIntroExit .85s cubic-bezier(.7,0,.3,1) 2.75s forwards;
+}
+#pbWelcomeIntro:before,#pbWelcomeIntro:after{
+  content:"";position:absolute;left:50%;width:min(74vw,520px);height:1px;
+  background:linear-gradient(90deg,transparent,#c7a45b,transparent);
+  transform:translateX(-50%);opacity:.8;
+}
+#pbWelcomeIntro:before{top:calc(50% - 104px)}
+#pbWelcomeIntro:after{top:calc(50% + 104px)}
+.pb-intro-content{position:relative;z-index:1;animation:pbIntroText 1s cubic-bezier(.2,.75,.25,1) both}
+.pb-intro-kicker{display:block;margin-bottom:24px;color:#e4cf9a;font-size:clamp(10px,1.8vw,13px);font-weight:700;letter-spacing:clamp(4px,1vw,8px);text-transform:uppercase}
+.pb-intro-name{margin:0;font-family:Impact,'Arial Narrow',sans-serif;font-size:clamp(54px,11vw,116px);line-height:.9;letter-spacing:clamp(1px,.4vw,5px);text-transform:uppercase;color:#f6e8c3;text-shadow:0 3px 0 #725a2d,0 8px 24px #000,0 0 34px #c7a45b35}
+.pb-intro-name span{display:block;margin-top:12px;font-size:.48em;letter-spacing:clamp(6px,1.5vw,15px);color:#c7a45b}
+.pb-intro-tagline{margin:34px 0 0;color:#c8c0b1;font-size:10px;letter-spacing:4px;text-transform:uppercase}
+@keyframes pbIntroText{from{opacity:0;transform:translateY(20px) scale(.97);filter:blur(7px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes pbIntroExit{to{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){#pbWelcomeIntro{animation-duration:.01ms;animation-delay:0ms}.pb-intro-content{animation-duration:.01ms}}
+
 </style>
 </head>
-<body><div id="app">
+<body>
+<div id="pbWelcomeIntro" aria-label="Bienvenido a PHILIPE BARBER CLUB" role="status">
+  <div class="pb-intro-content">
+    <span class="pb-intro-kicker">Bienvenido a</span>
+    <h1 class="pb-intro-name">PHILIPE<span>BARBER CLUB</span></h1>
+    <p class="pb-intro-tagline">Estilo · Precisión · Actitud</p>
+  </div>
+</div>
+<div id="app">
 <header class="topbar"><div class="brand">PHILIPE <span>BARBER</span></div><nav class="nav"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#galeria">Galería</a><a href="#citas">Reservas</a><a href="#comentarios">Comentarios</a><a href="#contacto">Contacto</a></nav><a class="btn" href="#citas">▦&nbsp; Reservar cita</a></header>
 <main>
 <section class="hero" id="inicio"><div class="hero-copy"><div class="barber-pole" role="img" aria-label="Barrilete de barbería en tonos crema, negro y dorado"><span class="cap top"></span><span class="glass"><span class="stripes"></span></span><span class="cap bottom"></span></div><div class="eyebrow welcome-line">BIENVENIDO A</div><h1 class="welcome-title"><span id="heroBrandName">PHILIPE BARBER</span></h1><div class="hero-motto">ESTILO, PRECISIÓN Y ACTITUD</div><p class="hero-slogan" id="heroSlogan">Tu estilo marca la diferencia.</p><div class="hero-actions"><a class="btn" href="#citas">▦&nbsp; Reservar cita</a></div></div></section>
