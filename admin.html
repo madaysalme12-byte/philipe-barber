@@ -206,7 +206,7 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
 /* Encabezado de marca del panel administrativo */
 .modal-head{align-items:center;gap:18px}
 .admin-modal-brand{min-width:0}
-.admin-modal-brand h2{
+#adminBackdrop .admin-modal-brand h2{
   margin:0;
   font-family:'Cormorant Garamond','Playfair Display',Georgia,serif;
   font-size:clamp(30px,5vw,48px);
@@ -214,12 +214,13 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
   letter-spacing:1.5px;
   font-weight:800;
   text-transform:uppercase;
-  background:linear-gradient(180deg,#fff5d5 0%,#d8c18b 20%,#8c7138 43%,#f4e3b0 52%,#8b6b2e 68%,#2b2417 100%);
-  background-clip:text;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  -webkit-text-stroke:.6px #17130b;
-  filter:drop-shadow(0 2px 0 #665026) drop-shadow(0 5px 10px #0009);
+  color:#D6A34D;
+  background:none;
+  -webkit-background-clip:initial;
+  -webkit-text-fill-color:#D6A34D;
+  -webkit-text-stroke:0;
+  filter:none;
+  text-shadow:0 3px 16px #D6A34D22;
 }
 .admin-modal-brand p{
   margin:9px 0 0;
