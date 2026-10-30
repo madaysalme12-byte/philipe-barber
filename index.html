@@ -575,6 +575,16 @@ Contacto directo por WhatsApp */
 }
 
 
+/* En celular, quitar el contorno negro del texto de la pantalla de bienvenida */
+@media (max-width: 620px) {
+  #pbWelcomeIntro .pb-intro-name,
+  #pbWelcomeIntro .pb-intro-name span {
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+}
+
 /* Transición continua: secciones oscuras sin separadores dorados.
    Se conserva intacto el fondo/imagen de la portada principal. */
 .hero {
