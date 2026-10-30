@@ -291,6 +291,30 @@ Contacto directo por WhatsApp */
   }
 }
 
+
+/* Galería editorial vertical con marco y fondo de profundidad */
+#galeria{background:radial-gradient(ellipse at 50% 45%,#292116 0%,#12110f 48%,#080808 100%)!important;position:relative;overflow:hidden}
+#galeria:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,#d6a34d08 0 1px,transparent 1px 28px);pointer-events:none}
+#galeria .section-head,#galeria .gallery-grid{position:relative;z-index:1}
+#galeria .gallery-grid{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(2,minmax(0,.82fr));grid-template-rows:auto;gap:clamp(10px,1.7vw,22px);align-items:stretch}
+#galeria .gallery-tile{aspect-ratio:3/4;min-height:0;height:auto;padding:18px;background-color:#080808!important;background-repeat:no-repeat!important;background-size:100% auto!important;background-position:center center!important;border:1px solid #b58b43;border-radius:5px;box-shadow:0 20px 45px #000b,0 0 0 5px #d6a34d0b;isolation:isolate}
+#galeria .gallery-tile.main-photo{grid-row:auto;min-height:0}
+#galeria .gallery-tile.side-photo{min-height:0}
+#galeria .gallery-tile:before{z-index:1;background:linear-gradient(180deg,#08080810 45%,#080808b8 100%),radial-gradient(ellipse at 50% 20%,#d6a34d18,transparent 65%)}
+#galeria .gallery-tile:after{content:"";position:absolute;z-index:2;inset:9px;border:1px solid #d6a34d70;pointer-events:none}
+#galeria .gallery-tile strong{z-index:3}
+@media(max-width:800px){
+ #galeria .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ #galeria .gallery-tile.main-photo{grid-column:1/-1;grid-row:auto;aspect-ratio:4/5;min-height:0}
+ #galeria .gallery-tile.side-photo{aspect-ratio:3/4;min-height:0}
+}
+@media(max-width:420px){
+ #galeria .gallery-grid{gap:9px}
+ #galeria .gallery-tile{padding:12px}
+ #galeria .gallery-tile.main-photo{aspect-ratio:4/5}
+ #galeria .gallery-tile.side-photo{aspect-ratio:3/4}
+}
+
 </style>
 </head>
 <body><div id="app">
@@ -360,6 +384,6 @@ document.getElementById('photoInput').addEventListener('change',()=>{alert('Para
 document.getElementById('mosaicToggle').addEventListener('change',()=>{business.mosaic=document.getElementById('mosaicToggle').checked;persist();renderPhotos();});
 async function loadSupabasePhotos(){const gallery=document.getElementById('galleryGrid');try{const {data,error}=await supabaseClient.from('fotos_barberia').select('id,categoria,nombre,ruta_archivo');if(error)throw error;photos=(data||[]).map(p=>({...p,src:supabaseClient.storage.from('fotos-barberia').getPublicUrl(p.ruta_archivo).data.publicUrl}));mainPhotoId=photos.find(p=>p.categoria==='principal')?.id||'';renderPhotos();if(!photos.length&&gallery){gallery.setAttribute('data-photo-status','empty');console.warn('Supabase respondió correctamente, pero no devolvió fotografías.');}}catch(error){console.error('Error real al cargar las fotografías de PHILIPE BARBER:',error);photos=[];renderPhotos();if(gallery){gallery.setAttribute('data-photo-status','error');gallery.innerHTML='<div class="empty">No pudimos cargar las fotografías.<br><small style="display:block;margin-top:8px;opacity:.8">'+esc((error&&error.message)||'Error de conexión')+'</small><small style="display:block;opacity:.65">'+esc((error&&error.code)||'')+'</small></div>';} }}
 let sideRotationIndex=0;
-function renderPhotos(){const gallery=document.getElementById('galleryGrid');if(!gallery)return;gallery.innerHTML='';const main=photos.find(p=>p.categoria==='principal');const rotating=photos.filter(p=>['mosaico1','mosaico2','galeria'].includes(p.categoria));sideRotationIndex=0;const makeTile=(p,cls,label)=>{const tile=document.createElement('div');tile.className='gallery-tile '+cls;if(p){tile.style.backgroundImage='url("'+p.src+'")';tile.style.backgroundSize='cover';tile.style.backgroundPosition='center';tile.innerHTML='';}else{tile.innerHTML='<strong>'+label+'</strong>';}gallery.appendChild(tile);return tile;};makeTile(main,'main-photo','Foto principal');const sideA=makeTile(rotating[0],'side-photo','Próximamente');const sideB=makeTile(rotating[1],'side-photo','Más trabajos');if(window.pbSideRotation)clearInterval(window.pbSideRotation);if(rotating.length>2){window.pbSideRotation=setInterval(()=>{sideRotationIndex=(sideRotationIndex+2)%rotating.length;[sideA,sideB].forEach((tile,i)=>{const p=rotating[(sideRotationIndex+i)%rotating.length];tile.style.backgroundImage='url("'+p.src+'")';tile.classList.remove('photo-changing');void tile.offsetWidth;tile.classList.add('photo-changing');});},4000);}}
+function renderPhotos(){const gallery=document.getElementById('galleryGrid');if(!gallery)return;gallery.innerHTML='';const main=photos.find(p=>p.categoria==='principal');const rotating=photos.filter(p=>['mosaico1','mosaico2','galeria'].includes(p.categoria));sideRotationIndex=0;const makeTile=(p,cls,label)=>{const tile=document.createElement('div');tile.className='gallery-tile '+cls;if(p){let meta={fileName:p.nombre||'',zoom:100,x:50,y:50};try{const v=JSON.parse(p.nombre||'');if(v&&v.__pbPhoto===1)meta={...meta,...v};}catch(e){}tile.style.backgroundImage='url("'+p.src+'")';tile.style.backgroundSize=(Number(meta.zoom)||100)+'% auto';tile.style.backgroundPosition=(Number(meta.x??50))+'% '+(Number(meta.y??50))+'%';tile.innerHTML='';}else{tile.innerHTML='<strong>'+label+'</strong>';}gallery.appendChild(tile);return tile;};makeTile(main,'main-photo','Foto principal');const sideA=makeTile(rotating[0],'side-photo','Próximamente');const sideB=makeTile(rotating[1],'side-photo','Más trabajos');if(window.pbSideRotation)clearInterval(window.pbSideRotation);if(rotating.length>2){window.pbSideRotation=setInterval(()=>{sideRotationIndex=(sideRotationIndex+2)%rotating.length;[sideA,sideB].forEach((tile,i)=>{const p=rotating[(sideRotationIndex+i)%rotating.length];tile.style.backgroundImage='url("'+p.src+'")';tile.classList.remove('photo-changing');void tile.offsetWidth;tile.classList.add('photo-changing');});},4000);}}
 const today=new Date();const iso=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);document.getElementById('apptDate').min=iso;document.getElementById('adminDate').min=iso;document.getElementById('adminDate').value=iso;timeSlots();renderServices();renderBusiness();renderAppointments();loadSupabasePhotos();const waFloat=document.getElementById('whatsappFloat');if(waFloat){const waDigits=String(business.phone||'').replace(/\D/g,'');if(waDigits.length>=10){waFloat.href='https://wa.me/'+waDigits+'?text='+encodeURIComponent('Hola, PHILIPE BARBER. Quisiera información sobre sus servicios y disponibilidad.');}else{waFloat.href='#booking';waFloat.addEventListener('click',e=>{if(!business.phone||String(business.phone).replace(/\D/g,'').length<10){e.preventDefault();document.getElementById('booking').scrollIntoView({behavior:'smooth'});}});}}
 </script></body></html>
