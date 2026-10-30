@@ -247,18 +247,19 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
 }
 .admin-dashboard-brand h1{
   margin:0;
-  font-family:'Cormorant Garamond','Playfair Display',Georgia,serif;
+  font-family:var(--site-font-heading);
   font-size:clamp(32px,5vw,54px);
   line-height:1;
-  letter-spacing:2px;
-  font-weight:900;
+  letter-spacing:1px;
+  font-weight:1000;
   text-transform:uppercase;
+  color:#d7c18a;
   background:linear-gradient(180deg,#fff5d5 0%,#d8c18b 20%,#8c7138 43%,#f4e3b0 52%,#8b6b2e 68%,#2b2417 100%);
   background-clip:text;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  -webkit-text-stroke:.6px #17130b;
-  filter:drop-shadow(0 2px 0 #665026) drop-shadow(0 6px 12px #0009);
+  -webkit-text-stroke:1px #17130b;
+  filter:drop-shadow(0 2px 0 #fff0c0) drop-shadow(0 5px 0 #665026) drop-shadow(0 8px 0 #090909) drop-shadow(0 18px 18px #000);
 }
 .admin-dashboard-brand p{
   margin:10px 0 0;
