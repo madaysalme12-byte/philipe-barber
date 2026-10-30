@@ -604,6 +604,50 @@ main {
   border-bottom: 0 !important;
 }
 
+
+/* Fondo negro uniforme para toda la página pública, excepto la portada principal */
+html, body, #app {
+  background: #0b0b0b !important;
+}
+#app {
+  background-color: #0b0b0b !important;
+}
+.topbar,
+.services,
+.gallery,
+#galeria,
+.testimonials,
+.booking,
+.partnership-strip,
+.footer {
+  background: #0b0b0b !important;
+  background-image: none !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+/* Quitar líneas y marcos dorados alrededor de las fotografías */
+#galeria .gallery-tile,
+#galeria .gallery-tile.main-photo,
+#galeria .gallery-tile.side-photo {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background-color: #0b0b0b !important;
+}
+#galeria .gallery-tile::after,
+#galeria .gallery-tile.main-photo::after,
+#galeria .gallery-tile.side-photo::after {
+  content: none !important;
+  display: none !important;
+}
+#galeria .gallery-tile.main-photo strong {
+  border-left: 0 !important;
+}
+/* Mantener intacta la imagen y el degradado propio de la portada */
+.hero {
+  background-color: transparent !important;
+}
+
 </style>
 </head>
 <body>
