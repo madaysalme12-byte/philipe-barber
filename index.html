@@ -440,7 +440,7 @@ Contacto directo por WhatsApp */
 }
 
 
-/* Ajuste móvil profesional: foto principal vertical y secundarias horizontales a todo el ancho */
+/* Galería móvil: las tres fotografías se mantienen verticales y visibles */
 @media(max-width:800px){
   #galeria .gallery-grid{
     grid-template-columns:minmax(0,1fr)!important;
@@ -459,7 +459,7 @@ Contacto directo por WhatsApp */
   #galeria .gallery-tile.side-photo:nth-of-type(3){
     grid-column:1!important;
     grid-row:auto!important;
-    aspect-ratio:16/9!important;
+    aspect-ratio:4/5!important;
     width:100%!important;
     min-height:0!important;
     height:auto!important;
@@ -471,7 +471,7 @@ Contacto directo por WhatsApp */
   #galeria .gallery-tile.side-photo,
   #galeria .gallery-tile.side-photo:nth-of-type(2),
   #galeria .gallery-tile.side-photo:nth-of-type(3){
-    aspect-ratio:16/9!important;
+    aspect-ratio:4/5!important;
   }
 }
 
