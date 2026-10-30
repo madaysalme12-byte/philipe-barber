@@ -835,6 +835,41 @@ main>.page-view#contacto.active{display:flex!important;flex-direction:column;jus
     object-fit: cover !important;
   }
 }
+
+/* Galería corregida: mostrar todas las fotografías sin rotación automática */
+#galeria #galleryGrid{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ grid-auto-rows:auto!important;
+ gap:16px!important;
+ height:auto!important;
+}
+#galeria #galleryGrid>.gallery-tile,
+#galeria #galleryGrid>.gallery-tile.main-photo,
+#galeria #galleryGrid>.gallery-tile.side-photo{
+ grid-column:auto!important;
+ grid-row:auto!important;
+ width:100%!important;
+ height:auto!important;
+ min-height:0!important;
+ aspect-ratio:3/4!important;
+}
+#galeria #galleryGrid>.gallery-tile img{
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ object-fit:cover!important;
+}
+@media(max-width:800px){
+ #galeria #galleryGrid{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
+ #galeria #galleryGrid>.gallery-tile,
+ #galeria #galleryGrid>.gallery-tile.main-photo,
+ #galeria #galleryGrid>.gallery-tile.side-photo{
+  grid-column:1!important;grid-row:auto!important;
+  aspect-ratio:16/9!important;min-height:0!important;height:auto!important;
+ }
+}
 </style>
 </head>
 <body>
@@ -998,7 +1033,29 @@ async function deleteSponsorImage(id){const p=photos.find(x=>String(x.id)===Stri
 async function uploadSponsorImage(file){const status=document.getElementById('sponsorUploadStatus');if(!file)return;if(!file.type.startsWith('image/')){status.textContent='Selecciona un archivo de imagen válido.';return;}status.textContent='Subiendo '+file.name+'…';const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path=Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safeName;const {error:upErr}=await supabaseClient.storage.from('fotos-barberia').upload(path,file,{contentType:file.type,upsert:false});if(upErr){status.textContent='No se pudo subir: '+upErr.message;return;}const {error}=await supabaseClient.from('fotos_barberia').insert({categoria:'adicional',nombre:JSON.stringify({__pbSponsor:1,fileName:file.name}),ruta_archivo:path});if(error){await supabaseClient.storage.from('fotos-barberia').remove([path]);status.textContent='No se pudo guardar: '+error.message;return;}await loadSupabasePhotos();status.textContent='¡Imagen de alianza añadida correctamente!';}
 document.getElementById('sponsorImageInput')?.addEventListener('change',async e=>{const files=Array.from(e.target.files||[]);for(const file of files){try{await uploadSponsorImage(file);}catch(err){document.getElementById('sponsorUploadStatus').textContent='Error: '+(err?.message||'Inténtalo nuevamente.');break;}}e.target.value='';});
 function renderPublicSponsors(){const strip=document.getElementById('partnershipStrip'),box=document.getElementById('partnershipImages');if(!strip||!box)return;const items=photos.filter(p=>{try{return JSON.parse(p.nombre||'').__pbSponsor===1;}catch(e){return false;}});box.innerHTML='';items.forEach(p=>{const img=document.createElement('img');img.src=p.src;img.alt='';img.loading='lazy';box.appendChild(img);});strip.hidden=!items.length;}
-function renderPhotos(){const gallery=document.getElementById('galleryGrid');if(!gallery)return;gallery.innerHTML='';const main=photos.find(p=>p.categoria==='principal');const rotating=photos.filter(p=>['mosaico1','mosaico2','galeria'].includes(p.categoria));sideRotationIndex=0;const makeTile=(p,cls,label)=>{const tile=document.createElement('div');tile.className='gallery-tile '+cls;if(p){const img=document.createElement('img');img.src=p.src;img.alt='Trabajo realizado en PHILIPE BARBER';img.loading='lazy';applyPhotoFraming(img,p);tile.appendChild(img);}else{tile.innerHTML='<strong>'+label+'</strong>';}gallery.appendChild(tile);return tile;};makeTile(main,'main-photo','Foto principal');const sideA=makeTile(rotating[0],'side-photo','Próximamente');const sideB=makeTile(rotating[1],'side-photo','Más trabajos');if(window.pbSideRotation)clearInterval(window.pbSideRotation);if(rotating.length>2){window.pbSideRotation=setInterval(()=>{sideRotationIndex=(sideRotationIndex+2)%rotating.length;[sideA,sideB].forEach((tile,i)=>{const p=rotating[(sideRotationIndex+i)%rotating.length];let img=tile.querySelector('img');if(!img){img=document.createElement('img');tile.appendChild(img);}img.src=p.src;img.alt='Trabajo realizado en PHILIPE BARBER';applyPhotoFraming(img,p);tile.classList.remove('photo-changing');void tile.offsetWidth;tile.classList.add('photo-changing');});},4000);}}
+function renderPhotos(){
+ const gallery=document.getElementById('galleryGrid');if(!gallery)return;
+ gallery.innerHTML='';
+ const visiblePhotos=photos.filter(p=>!isSponsorPhoto(p)).sort((a,b)=>{
+  if(a.categoria==='principal')return -1;
+  if(b.categoria==='principal')return 1;
+  return 0;
+ });
+ if(!visiblePhotos.length){
+  gallery.innerHTML='<div class="empty">Próximamente encontrarás aquí nuestros trabajos.</div>';
+  return;
+ }
+ visiblePhotos.forEach((p,index)=>{
+  const tile=document.createElement('div');
+  tile.className='gallery-tile '+(index===0?'main-photo':'side-photo');
+  const img=document.createElement('img');
+  img.src=p.src;img.alt='Trabajo realizado en PHILIPE BARBER';
+  img.loading=index<3?'eager':'lazy';
+  applyPhotoFraming(img,p);
+  tile.appendChild(img);
+  gallery.appendChild(tile);
+ });
+}
 async function loadPublicBusinessConfig(){try{const {data,error}=await supabaseClient.from('configuracion_barberia').select('datos').eq('id',1).maybeSingle();if(error)throw error;if(data?.datos&&typeof data.datos==='object'){business={...business,...data.datos};renderBusiness();persist();const wa=document.getElementById('whatsappFloat');const digits=String(business.phone||'').replace(/\D/g,'');if(wa&&digits.length>=10)wa.href='https://wa.me/'+digits+'?text='+encodeURIComponent('Hola, PHILIPE BARBER. Quisiera información sobre sus servicios y disponibilidad.');}}catch(err){console.error('No se pudo cargar la configuración pública:',err);}}loadPublicComments();loadPublicBusinessConfig();const today=new Date();const iso=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);document.getElementById('apptDate').min=iso;document.getElementById('adminDate').min=iso;document.getElementById('adminDate').value=iso;timeSlots();renderServices();renderBusiness();renderAppointments();refreshPublicSlots();loadSupabasePhotos();
 // Mantener la galería pública sincronizada con los encuadres guardados desde el panel.
 window.addEventListener('focus',()=>loadSupabasePhotos());
