@@ -482,6 +482,24 @@ Contacto directo por WhatsApp */
   box-shadow:none!important;
   outline:0!important;
 }
+
+/* Eliminar completamente los marcos decorativos dorados de las fotos */
+#galeria .gallery-tile,
+#galeria .gallery-tile.main-photo,
+#galeria .gallery-tile.side-photo{
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  border-radius:0!important;
+}
+#galeria .gallery-tile::after,
+#galeria .gallery-tile.main-photo::after,
+#galeria .gallery-tile.side-photo::after{
+  content:none!important;
+  display:none!important;
+  border:0!important;
+  box-shadow:none!important;
+}
 </style>
 </head>
 <body><div id="app">
