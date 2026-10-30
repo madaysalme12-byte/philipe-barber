@@ -580,29 +580,29 @@ Contacto directo por WhatsApp */
   }
 }
 
-/* Transición continua: secciones oscuras sin separadores dorados.
-   Se conserva intacto el fondo/imagen de la portada principal. */
+/* Fondo público negro degradado y continuo.
+   La portada conserva intacta su imagen de fondo original. */
+html, body {
+  background: linear-gradient(180deg, #101010 0%, #0b0b0b 42%, #070707 72%, #050505 100%) fixed !important;
+}
+main {
+  background: transparent !important;
+}
 .hero {
   border-bottom: 0 !important;
 }
 .services,
 .gallery,
 #galeria,
+.testimonials,
 .booking,
 .partnership-strip,
 .footer {
-  background: #151515 !important;
+  background: transparent !important;
+  background-image: none !important;
   border-top: 0 !important;
   border-bottom: 0 !important;
 }
-.services,
-.gallery,
-#galeria,
-.booking {
-  background-image: none !important;
-}
-
-
 
 </style>
 </head>
