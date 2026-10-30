@@ -679,6 +679,30 @@ main > section:not(.hero)::after,
   box-shadow: none !important;
 }
 
+
+/* Corrección puntual: eliminar el patrón de líneas diagonales doradas
+   que aparece en el fondo de la sección de fotografías. */
+#galeria {
+  background: #0b0b0b !important;
+}
+#galeria::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+@media (min-width: 801px) {
+  #galeria {
+    background: #0b0b0b !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+  }
+  #galeria::before {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
