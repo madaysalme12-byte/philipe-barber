@@ -315,6 +315,61 @@ Contacto directo por WhatsApp */
  #galeria .gallery-tile.side-photo{aspect-ratio:3/4}
 }
 
+
+/* Ajuste premium para escritorio: dos laterales verticales y protagonista central */
+@media(min-width:801px){
+ #galeria{
+  background:
+   radial-gradient(ellipse at 50% 48%,rgba(177,133,57,.23) 0%,rgba(83,61,29,.13) 28%,transparent 62%),
+   radial-gradient(ellipse at 50% 100%,rgba(132,91,34,.18),transparent 55%),
+   linear-gradient(112deg,#050505 0%,#17130d 24%,#090909 50%,#17130d 76%,#050505 100%)!important;
+  border-top:1px solid #8d6b35!important;
+  border-bottom:1px solid #8d6b35!important;
+  padding-top:clamp(76px,8vw,112px)!important;
+  padding-bottom:clamp(76px,8vw,112px)!important;
+ }
+ #galeria:before{
+  background:
+   linear-gradient(90deg,transparent 0%,rgba(214,163,77,.12) 50%,transparent 100%),
+   repeating-linear-gradient(135deg,rgba(214,163,77,.035) 0 1px,transparent 1px 34px)!important;
+  opacity:.9;
+ }
+ #galeria .gallery-grid{
+  grid-template-columns:minmax(220px,.78fr) minmax(360px,1.35fr) minmax(220px,.78fr)!important;
+  grid-template-rows:minmax(440px, min(52vw,620px))!important;
+  gap:clamp(16px,2.1vw,30px)!important;
+  align-items:center!important;
+  max-width:1450px;
+  margin:0 auto;
+  padding:18px clamp(8px,1.2vw,20px);
+  position:relative;
+ }
+ #galeria .gallery-tile{
+  aspect-ratio:3/4!important;
+  min-height:0!important;
+  height:100%!important;
+  padding:16px!important;
+  background-color:#050505!important;
+  background-repeat:no-repeat!important;
+  border:1px solid rgba(214,163,77,.78)!important;
+  border-radius:3px!important;
+  box-shadow:0 24px 55px rgba(0,0,0,.72),0 0 28px rgba(190,145,65,.12),inset 0 0 0 1px rgba(255,255,255,.045)!important;
+ }
+ #galeria .gallery-tile.main-photo{
+  grid-column:2!important;grid-row:1!important;
+  aspect-ratio:4/5!important;
+  transform:scale(1.025);
+  z-index:2;
+  box-shadow:0 30px 70px rgba(0,0,0,.8),0 0 42px rgba(214,163,77,.2),inset 0 0 0 1px rgba(255,255,255,.06)!important;
+ }
+ #galeria .gallery-tile.side-photo:nth-of-type(2){grid-column:1!important;grid-row:1!important}
+ #galeria .gallery-tile.side-photo:nth-of-type(3){grid-column:3!important;grid-row:1!important}
+ #galeria .gallery-tile.side-photo:before{background:linear-gradient(180deg,rgba(5,5,5,.02),rgba(5,5,5,.2) 72%,rgba(5,5,5,.62))!important}
+ #galeria .gallery-tile:after{inset:8px!important;border:1px solid rgba(226,184,104,.48)!important}
+ #galeria .gallery-tile.main-photo:after{inset:11px!important;border-color:rgba(226,184,104,.7)!important}
+ #galeria .gallery-tile strong{color:#f4e7cc!important;text-shadow:0 2px 12px #000;letter-spacing:2px!important}
+}
+
 </style>
 </head>
 <body><div id="app">
