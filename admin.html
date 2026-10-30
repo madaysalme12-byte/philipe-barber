@@ -161,7 +161,7 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
 .photo-editor-head h3{margin:6px 0 0}
 .photo-editor-layout{display:grid;grid-template-columns:minmax(180px,300px) minmax(220px,1fr);gap:26px;align-items:center;margin-top:18px}
 .photo-preview-frame{width:100%;max-width:360px;aspect-ratio:1.9/1;margin:auto;padding:8px;border:1px solid #c49b50;background:radial-gradient(ellipse at 50% 20%,#5a4728,#15130f 70%);box-shadow:0 12px 35px #0009}
-#photoEditorPreview{width:100%;height:100%;background-repeat:no-repeat;background-color:#090909}
+#photoEditorPreview{width:100%;height:100%;position:relative;overflow:hidden;background:#17130e}#photoEditorPreview img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;transform-origin:center;}
 .photo-editor-controls{display:grid;gap:10px}
 .photo-editor-controls label{font-size:12px;color:#e8d6b2;display:flex;justify-content:space-between}
 .photo-editor-controls input[type=range]{width:100%;accent-color:#D6A34D;margin-bottom:8px}
@@ -189,11 +189,11 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
 <div class="admin-panel" id="photosAdmin"><h3>Fotos de la galería</h3><p class="form-note">La foto principal permanece fija y grande. Puedes subir varias fotos laterales; irán rotando automáticamente en la página.</p><div class="field"><label for="photoMainInput">Foto principal fija (imagen grande)</label><input id="photoMainInput" type="file" accept="image/*"></div><div class="field"><label for="photoSide1Input">Fotos del mosaico lateral 1 (puedes seleccionar varias)</label><input id="photoSide1Input" type="file" accept="image/*" multiple></div><div class="field"><label for="photoSide2Input">Fotos del mosaico lateral 2 (puedes seleccionar varias)</label><input id="photoSide2Input" type="file" accept="image/*" multiple></div><div class="field"><button type="button" class="tab" onclick="loadSupabasePhotos()">Actualizar lista de fotografías</button></div><p id="photoUploadStatus" class="form-note" role="status" aria-live="polite">Selecciona una o varias imágenes para añadirlas a la rotación.</p><div id="adminPhotosList" class="admin-grid"></div>
 <div id="photoEditor" class="photo-editor" hidden>
   <div class="photo-editor-head"><div><span class="eyebrow">AJUSTE DE ENCUADRE</span><h3 id="photoEditorTitle">Ajustar fotografía</h3></div><button type="button" class="tab" onclick="closePhotoEditor()">Cerrar</button></div>
-  <p class="form-note">Mueve la imagen y ajusta el zoom hasta que el corte se vea como quieres. La vista previa es vertical, igual que aparecerá en la galería.</p>
+  <p class="form-note">Mueve la imagen y ajusta el zoom hasta que el corte se vea como quieres. La vista previa usa el mismo recorte adaptable de la página pública; la foto siempre llena el espacio, sin franjas negras.</p>
   <div class="photo-editor-layout">
     <div class="photo-preview-frame"><div id="photoEditorPreview"></div></div>
     <div class="photo-editor-controls">
-      <label for="photoZoom">Tamaño de la foto <strong id="photoZoomValue">100%</strong></label><input id="photoZoom" type="range" min="70" max="180" value="100">
+      <label for="photoZoom">Tamaño de la foto <strong id="photoZoomValue">100%</strong></label><input id="photoZoom" type="range" min="100" max="180" value="100">
       <label for="photoX">Mover horizontalmente</label><input id="photoX" type="range" min="0" max="100" value="50">
       <label for="photoY">Mover verticalmente</label><input id="photoY" type="range" min="0" max="100" value="50">
       <div class="photo-editor-actions"><button type="button" class="tab" onclick="resetPhotoCrop()">Restablecer</button><button type="button" class="btn" onclick="savePhotoCrop()">Guardar encuadre</button></div>
@@ -220,7 +220,7 @@ function photoMeta(p){try{const v=JSON.parse(p.nombre||'');if(v&&v.__pbPhoto===1
 let editingPhotoId=null;
 function photoBackground(p){const m=photoMeta(p);return {size:(m.zoom)+'% auto',position:m.x+'% '+m.y+'%'};}
 function openPhotoEditor(id){const p=photos.find(x=>String(x.id)===String(id));if(!p)return;editingPhotoId=String(id);const m=photoMeta(p);document.getElementById('photoEditor').hidden=false;document.getElementById('photoEditorTitle').textContent=m.fileName;document.getElementById('photoZoom').value=m.zoom;document.getElementById('photoX').value=m.x;document.getElementById('photoY').value=m.y;updatePhotoPreview();document.getElementById('photoEditor').scrollIntoView({behavior:'smooth',block:'center'});}
-function updatePhotoPreview(){const p=photos.find(x=>String(x.id)===editingPhotoId);if(!p)return;const z=Number(document.getElementById('photoZoom').value),x=Number(document.getElementById('photoX').value),y=Number(document.getElementById('photoY').value);const preview=document.getElementById('photoEditorPreview');preview.style.backgroundImage='url("'+p.src+'")';preview.style.backgroundSize=z+'% auto';preview.style.backgroundPosition=x+'% '+y+'%';document.getElementById('photoZoomValue').textContent=z+'%';}
+function updatePhotoPreview(){const p=photos.find(x=>String(x.id)===editingPhotoId);if(!p)return;const z=Math.max(100,Number(document.getElementById('photoZoom').value)),x=Number(document.getElementById('photoX').value),y=Number(document.getElementById('photoY').value);const preview=document.getElementById('photoEditorPreview');let img=preview.querySelector('img');if(!img){img=document.createElement('img');img.alt='Vista previa del encuadre';preview.appendChild(img);}img.src=p.src;img.style.objectFit='cover';img.style.objectPosition=x+'% '+y+'%';img.style.transform='scale('+(z/100)+')';document.getElementById('photoZoomValue').textContent=z+'%';}
 ['photoZoom','photoX','photoY'].forEach(id=>document.getElementById(id).addEventListener('input',updatePhotoPreview));
 function resetPhotoCrop(){document.getElementById('photoZoom').value=100;document.getElementById('photoX').value=50;document.getElementById('photoY').value=50;updatePhotoPreview();}
 function closePhotoEditor(){document.getElementById('photoEditor').hidden=true;editingPhotoId=null;}
