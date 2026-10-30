@@ -648,6 +648,37 @@ html, body, #app {
   background-color: transparent !important;
 }
 
+
+/* Eliminar cualquier separador dorado del fondo de las secciones públicas.
+   La portada .hero conserva intactos su fondo y sus detalles. */
+main > section:not(.hero),
+main > section:not(.hero)::before,
+main > section:not(.hero)::after,
+.topbar,
+.partnership-strip,
+.footer {
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+.services,
+.gallery,
+#galeria,
+.testimonials,
+.booking,
+.partnership-strip,
+.footer {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  outline: 0 !important;
+}
+.section-head::before,
+.section-head::after {
+  border-color: transparent !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
 </style>
 </head>
 <body>
