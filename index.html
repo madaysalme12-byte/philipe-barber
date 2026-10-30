@@ -745,6 +745,66 @@ section#galeria#galeria::after {
   box-shadow: none !important;
   background: transparent !important;
 }
+
+/* Navegación por vistas independientes: se conserva el contenido de cada sección */
+html,body{height:100%;overflow:hidden}
+#app{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.topbar{position:relative;top:auto;flex:0 0 auto}
+main{flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
+main>.page-view{display:none!important;height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+main>.page-view.active{display:block!important}
+main>.page-view#inicio{display:none!important}
+main>.page-view#inicio.active{display:flex!important;align-items:center;justify-content:center}
+main>.page-view#inicio .hero-copy{width:100%}
+main>.page-view#contacto{display:none!important}
+main>.page-view#contacto.active{display:flex!important;flex-direction:column;justify-content:center}
+.nav a[aria-current="page"]{color:var(--site-primary);position:relative}
+.nav a[aria-current="page"]:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:var(--site-primary)}
+.site-bottom{flex:0 0 auto;max-height:25vh;overflow-y:auto;overscroll-behavior:contain;background:#0b0b0b}
+#businessInfoBottom{padding-bottom:12px}
+#businessInfoBottom .info-list{margin-top:0}
+#partnershipStrip{padding-top:10px;padding-bottom:10px}
+#partnershipImages img{max-height:64px;width:min(30%,240px)}
+.social-strip{padding-top:10px;padding-bottom:10px}
+.social-strip h2{font-size:18px;margin-bottom:8px}
+.footer{padding-top:12px;padding-bottom:12px}
+.contact-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+.contact-footnote{color:#aaa;font-size:12px;margin-top:24px}
+@media(min-width:801px){
+ #app{height:100vh;height:100dvh}
+ .topbar{min-height:76px}
+ main>.page-view{padding-top:clamp(28px,4vh,58px);padding-bottom:clamp(28px,4vh,58px)}
+ main>.page-view#inicio{padding-top:24px;padding-bottom:24px}
+ main>.page-view#inicio .hero-copy{transform:scale(.88)}
+ .site-bottom{max-height:190px}
+ #businessInfoBottom .business-info-bottom .info-list,
+ #businessInfoBottom .info-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:800px){
+ #app{height:100vh;height:100dvh}
+ .topbar{flex-wrap:wrap;gap:8px;padding:10px 14px}
+ .topbar .brand{order:1}
+ .topbar>.btn{order:2;margin-left:auto}
+ .topbar .nav{display:flex!important;order:3;width:100%;max-width:100%;overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;gap:20px;padding:9px 2px 5px;scrollbar-width:none}
+ .topbar .nav::-webkit-scrollbar{display:none}
+ .topbar .nav a{white-space:nowrap;font-size:10px}
+ main>.page-view{padding:28px 18px;min-height:0}
+ main>.page-view#inicio{padding:18px 14px}
+ main>.page-view#inicio .hero-copy{transform:none}
+ .site-bottom{max-height:22vh}
+ #businessInfoBottom{padding:4px 14px 8px}
+ #businessInfoBottom .info-list{grid-template-columns:1fr!important;gap:5px}
+ #businessInfoBottom .info-row{padding-bottom:5px}
+ #businessInfoBottom .info-row span{margin-bottom:2px}
+ #businessInfoBottom .info-row strong{font-size:11px}
+ #partnershipImages{gap:10px}
+ #partnershipImages img{max-height:38px;width:min(28%,150px)}
+ .social-strip{padding:7px 12px}
+ .social-strip h2{font-size:14px;margin-bottom:5px}
+ .social-links{gap:12px}
+ .footer{padding:8px 14px;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){main>.page-view{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -759,13 +819,14 @@ section#galeria#galeria::after {
 <div id="app">
 <header class="topbar"><div class="brand">PHILIPE <span>BARBER</span></div><nav class="nav"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#galeria">Galería</a><a href="#citas">Reservas</a><a href="#comentarios">Comentarios</a><a href="#contacto">Contacto</a></nav><a class="btn" href="#citas">▦&nbsp; Reservar cita</a></header>
 <main>
-<section class="hero" id="inicio"><div class="hero-copy"><div class="barber-pole" role="img" aria-label="Barrilete de barbería en tonos crema, negro y dorado"><span class="cap top"></span><span class="glass"><span class="stripes"></span></span><span class="cap bottom"></span></div><div class="eyebrow welcome-line">BIENVENIDO A</div><h1 class="welcome-title"><span id="heroBrandName">PHILIPE BARBER</span></h1><div class="hero-motto">ESTILO, PRECISIÓN Y ACTITUD</div><p class="hero-slogan" id="heroSlogan">Tu estilo marca la diferencia.</p><div class="hero-actions"><a class="btn" href="#citas">▦&nbsp; Reservar cita</a></div></div></section>
-<section class="section gallery" id="galeria"><div class="section-head"><div><div class="eyebrow">Nuestro trabajo</div><h2>El detalle hace <span>la diferencia</span></h2></div></div><div class="gallery-grid" id="galleryGrid"><div class="gallery-tile main-photo"><span class="tile-icon">✦</span><strong>Foto principal fija</strong></div><div class="gallery-tile side-photo"><span class="tile-icon">⌁</span><strong>Mosaico de cortes</strong></div><div class="gallery-tile side-photo mosaic"><span class="tile-icon">✂</span><strong>Detalles y acabados</strong></div></div></section>
-<section class="section services" id="servicios"><div class="section-head"><div><div class="eyebrow">Elige tu estilo</div><h2>Servicios</h2></div></div><div class="service-grid" id="publicServices"></div></section>
-<section class="section testimonials" id="comentarios"><div class="section-head"><div><div class="eyebrow">Experiencias</div><h2>Lo que dicen <span>nuestros clientes</span></h2></div></div><div class="testimonial-note"><p>“Tu estilo habla por ti; la elegancia deja huella.”</p><small>PHILIPE BARBER</small></div>
+<section class="hero page-view" id="inicio"><div class="hero-copy"><div class="barber-pole" role="img" aria-label="Barrilete de barbería en tonos crema, negro y dorado"><span class="cap top"></span><span class="glass"><span class="stripes"></span></span><span class="cap bottom"></span></div><div class="eyebrow welcome-line">BIENVENIDO A</div><h1 class="welcome-title"><span id="heroBrandName">PHILIPE BARBER</span></h1><div class="hero-motto">ESTILO, PRECISIÓN Y ACTITUD</div><p class="hero-slogan" id="heroSlogan">Tu estilo marca la diferencia.</p><div class="hero-actions"><a class="btn" href="#citas">▦&nbsp; Reservar cita</a></div></div></section>
+<section class="section gallery page-view" id="galeria"><div class="section-head"><div><div class="eyebrow">Nuestro trabajo</div><h2>El detalle hace <span>la diferencia</span></h2></div></div><div class="gallery-grid" id="galleryGrid"><div class="gallery-tile main-photo"><span class="tile-icon">✦</span><strong>Foto principal fija</strong></div><div class="gallery-tile side-photo"><span class="tile-icon">⌁</span><strong>Mosaico de cortes</strong></div><div class="gallery-tile side-photo mosaic"><span class="tile-icon">✂</span><strong>Detalles y acabados</strong></div></div></section>
+<section class="section services page-view" id="servicios"><div class="section-head"><div><div class="eyebrow">Elige tu estilo</div><h2>Servicios</h2></div></div><div class="service-grid" id="publicServices"></div></section>
+<section class="section testimonials page-view" id="comentarios"><div class="section-head"><div><div class="eyebrow">Experiencias</div><h2>Lo que dicen <span>nuestros clientes</span></h2></div></div><div class="testimonial-note"><p>“Tu estilo habla por ti; la elegancia deja huella.”</p><small>PHILIPE BARBER</small></div>
 <div class="comments-public"><h3>Comparte tu experiencia</h3><form id="publicCommentForm" class="comment-form"><div class="field"><label for="commentName">Tu nombre</label><input id="commentName" maxlength="60" required placeholder="¿Cómo te llamas?"></div><div class="field"><label for="commentText">Tu comentario</label><textarea id="commentText" maxlength="500" required placeholder="Cuéntanos cómo fue tu experiencia..." rows="4"></textarea></div><button class="btn" type="submit">Publicar comentario</button><p id="commentStatus" class="form-note" aria-live="polite"></p></form><div id="publicCommentsList" class="public-comments-list"><p class="form-note">Cargando comentarios...</p></div></div></section>
-<section class="section booking" id="citas"><div><div class="eyebrow">Tu próximo look empieza aquí</div><h2>Tu estilo marca la diferencia.</h2><p class="section-intro">Envíanos tu solicitud por WhatsApp y confirmaremos la disponibilidad de tu horario.</p></div><form class="booking-card" id="bookingForm"><div class="field"><label for="clientName">Nombre</label><input id="clientName" required placeholder="¿Cómo te llamas?"></div><div class="field"><label for="clientPhone">Tu número de contacto</label><input id="clientPhone" required inputmode="tel" placeholder="Número de celular"></div><div class="field"><label for="serviceSelect">Servicio</label><select id="serviceSelect" required></select></div><div class="field"><label for="apptDate">Fecha preferida</label><input type="date" id="apptDate" required></div><div class="field"><label for="apptTime">Hora preferida</label><select id="apptTime" required><option value="">Primero selecciona una fecha</option></select></div><div class="field"><label for="notes">Nota (opcional)</label><textarea id="notes" placeholder="Cuéntanos algún detalle que debamos saber"></textarea></div><button class="btn" type="submit" style="width:100%">Continuar por WhatsApp ↗</button><div id="formMessage" class="form-note" role="status"></div></form><div class="info-list" id="businessInfoList"><div class="info-row"><span>Horario</span><strong id="publicHours">Lunes a sábado · 9:00 a. m. – 8:00 p. m. | Domingo · 9:00 a. m. – 6:00 p. m.</strong></div><div class="info-row"><span>Dirección</span><strong id="publicAddress">Dirección por configurar</strong></div><div class="info-row"><span>Contacto</span><strong id="publicPhone">WhatsApp por configurar</strong></div></div></section>
-</main><div id="partnershipStrip" class="partnership-strip" hidden aria-label="Alianzas"><div id="partnershipImages" class="partnership-images"></div></div><section class="social-strip" aria-label="Redes sociales" hidden><h2>Encuéntranos en <span>redes sociales</span></h2><div id="publicSocials" class="social-links"></div></section><section id="businessInfoBottom" class="business-info-bottom" aria-label="Información de contacto"></section><footer class="footer"><div id="contacto"><strong>PHILIPE BARBER</strong> · Tu estilo marca la diferencia</div><div>ESTILO · PRECISIÓN · ACTITUD</div></footer>
+<section class="section booking page-view" id="citas"><div><div class="eyebrow">Tu próximo look empieza aquí</div><h2>Tu estilo marca la diferencia.</h2><p class="section-intro">Envíanos tu solicitud por WhatsApp y confirmaremos la disponibilidad de tu horario.</p></div><form class="booking-card" id="bookingForm"><div class="field"><label for="clientName">Nombre</label><input id="clientName" required placeholder="¿Cómo te llamas?"></div><div class="field"><label for="clientPhone">Tu número de contacto</label><input id="clientPhone" required inputmode="tel" placeholder="Número de celular"></div><div class="field"><label for="serviceSelect">Servicio</label><select id="serviceSelect" required></select></div><div class="field"><label for="apptDate">Fecha preferida</label><input type="date" id="apptDate" required></div><div class="field"><label for="apptTime">Hora preferida</label><select id="apptTime" required><option value="">Primero selecciona una fecha</option></select></div><div class="field"><label for="notes">Nota (opcional)</label><textarea id="notes" placeholder="Cuéntanos algún detalle que debamos saber"></textarea></div><button class="btn" type="submit" style="width:100%">Continuar por WhatsApp ↗</button><div id="formMessage" class="form-note" role="status"></div></form><div class="info-list" id="businessInfoList"><div class="info-row"><span>Horario</span><strong id="publicHours">Lunes a sábado · 9:00 a. m. – 8:00 p. m. | Domingo · 9:00 a. m. – 6:00 p. m.</strong></div><div class="info-row"><span>Dirección</span><strong id="publicAddress">Dirección por configurar</strong></div><div class="info-row"><span>Contacto</span><strong id="publicPhone">WhatsApp por configurar</strong></div></div></section>
+<section class="section contact-page page-view" id="contacto"><div class="section-head"><div><div class="eyebrow">Estamos para atenderte</div><h2>Contacto</h2><p class="section-intro">Comunícate con PHILIPE BARBER para resolver tus dudas, consultar disponibilidad o conocer más sobre nuestros servicios.</p></div></div><div class="contact-actions"><a class="btn" href="#citas">Reservar una cita</a><a class="btn outline" id="contactWhatsapp" href="#" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></div><p class="contact-footnote">Nuestros datos de horario, dirección y teléfono permanecen disponibles al pie de esta página.</p></section>
+</main><div id="partnershipStrip" class="partnership-strip" hidden aria-label="Alianzas"><div id="partnershipImages" class="partnership-images"></div></div><section class="social-strip" aria-label="Redes sociales" hidden><h2>Encuéntranos en <span>redes sociales</span></h2><div id="publicSocials" class="social-links"></div></section><section id="businessInfoBottom" class="business-info-bottom" aria-label="Información de contacto"></section><footer class="footer"><div id="footerBrand"><strong>PHILIPE BARBER</strong> · Tu estilo marca la diferencia</div><div>ESTILO · PRECISIÓN · ACTITUD</div></footer>
 </div>
 <a class="whatsapp-float" id="whatsappFloat" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">☏ <span>WhatsApp</span></a>
 <div class="modal-backdrop" id="adminBackdrop"><div class="modal"><div class="modal-head"><h2>Panel de administración</h2><button class="close" id="closeAdmin" aria-label="Cerrar">×</button></div><div id="adminLogin" style="max-width:420px;margin:24px auto"><h3>Acceso privado</h3><p class="form-note">Ingresa tus credenciales para administrar la barbería.</p><form id="adminLoginForm"><div class="field"><label for="adminUsername">Usuario</label><input id="adminUsername" autocomplete="username" required placeholder="Usuario"></div><div class="field"><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Contraseña"></div><p id="loginError" role="alert" style="color:#a12b20;font-size:12px;display:none">Usuario o contraseña incorrectos.</p><button class="btn" type="submit" style="width:100%">Ingresar</button></form></div><div id="adminContent" hidden><div class="notice"><strong>Nota:</strong> esta vista previa guarda los cambios solo en este navegador. Para proteger el administrador de una página publicada, se necesita autenticación del lado del servidor.</div><div class="admin-tabs"><button class="tab active" data-tab="appointments">Agenda diaria</button><button class="tab" data-tab="servicesAdmin">Servicios y precios</button><button class="tab" data-tab="businessAdmin">Datos de la página</button><button class="tab" data-tab="photosAdmin">Galería</button></div>
@@ -917,6 +978,26 @@ try{
     .on('postgres_changes',{event:'*',schema:'public',table:'fotos_barberia'},()=>loadSupabasePhotos())
     .subscribe();
 }catch(syncError){console.warn('La sincronización en tiempo real de fotografías no está disponible:',syncError);}
-function placeBusinessInfo(){const info=document.getElementById('businessInfoList'),bookingCard=document.getElementById('bookingForm'),bottom=document.getElementById('businessInfoBottom');if(!info||!bookingCard||!bottom)return;if(window.matchMedia('(min-width: 801px)').matches){if(info.parentElement!==bottom)bottom.appendChild(info);}else if(info.parentElement!==bookingCard.parentElement||info.previousElementSibling!==bookingCard){bookingCard.insertAdjacentElement('afterend',info);}}placeBusinessInfo();window.addEventListener('resize',placeBusinessInfo);
+function placeBusinessInfo(){const info=document.getElementById('businessInfoList'),bottom=document.getElementById('businessInfoBottom');if(info&&bottom&&info.parentElement!==bottom)bottom.appendChild(info);}placeBusinessInfo();
 const waFloat=document.getElementById('whatsappFloat');if(waFloat){const waDigits=String(business.phone||'').replace(/\D/g,'');if(waDigits.length>=10){waFloat.href='https://wa.me/'+waDigits+'?text='+encodeURIComponent('Hola, PHILIPE BARBER. Quisiera información sobre sus servicios y disponibilidad.');}else{waFloat.href='#booking';waFloat.addEventListener('click',e=>{if(!business.phone||String(business.phone).replace(/\D/g,'').length<10){e.preventDefault();document.getElementById('booking').scrollIntoView({behavior:'smooth'});}});}}
+
+/* Navegación tipo páginas: solo cambia la vista activa, sin desplazar toda la web */
+(function(){
+ const ids=['inicio','servicios','galeria','citas','comentarios','contacto'];
+ const pages=ids.map(id=>document.getElementById(id)).filter(Boolean);
+ const links=[...document.querySelectorAll('.topbar .nav a')];
+ function showPage(id,updateHash){
+  if(!ids.includes(id)||!document.getElementById(id))id='inicio';
+  pages.forEach(page=>{const active=page.id===id;page.classList.toggle('active',active);page.setAttribute('aria-hidden',active?'false':'true');if(active)page.scrollTop=0;});
+  links.forEach(link=>{const active=link.getAttribute('href')==='#'+id;if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
+  if(updateHash&&location.hash!=='#'+id)history.pushState({page:id},'', '#'+id);
+ }
+ document.addEventListener('click',event=>{
+  const link=event.target.closest('a[href^="#"]');if(!link)return;
+  const id=link.getAttribute('href').slice(1);if(!ids.includes(id))return;
+  event.preventDefault();showPage(id,true);
+ });
+ window.addEventListener('popstate',()=>showPage(location.hash.slice(1)||'inicio',false));
+ showPage(location.hash.slice(1)||'inicio',false);
+})();
 </script></body></html>
