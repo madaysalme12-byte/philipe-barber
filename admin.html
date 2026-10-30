@@ -171,6 +171,22 @@ html:has(#adminBackdrop),body:has(#adminBackdrop){min-height:100%;background:#08
 .photo-editor-actions .btn{border:0}
 .admin-photo-adjust{margin-top:8px!important;border:1px solid #c49b50!important;color:#f1c879!important;background:#17130d!important}
 @media(max-width:650px){.photo-editor-layout{grid-template-columns:1fr}.photo-preview-frame{max-width:320px;aspect-ratio:1.9/1}.photo-editor{padding:14px}}@media(max-width:480px){.photo-preview-frame{max-width:280px;aspect-ratio:1.5/1}}
+
+/* Ambas vistas del editor deben conservar el formato vertical solicitado */
+.photo-preview-frame,
+.photo-preview-frame.desktop-preview,
+.photo-preview-frame.mobile-preview{
+  width:100%;
+  max-width:260px;
+  aspect-ratio:3/4!important;
+  min-height:0;
+}
+.photo-preview-frame #photoEditorPreview{
+  width:100%;
+  height:100%;
+  aspect-ratio:3/4!important;
+}
+
 </style>
 </head>
 <body><div id="app">
