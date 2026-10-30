@@ -888,6 +888,29 @@ main>.page-view#contacto.active{display:flex!important;flex-direction:column;jus
  }
 }
 
+/* Desplazamiento vertical en computadora sin alterar el diseño ni la vista móvil */
+@media screen and (min-width:801px){
+  html,body{height:100%;overflow:hidden}
+  #app{height:100vh;height:100dvh;overflow:hidden}
+  main{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    position:relative;
+  }
+  main>.page-view{
+    height:auto;
+    min-height:100%;
+    overflow:visible;
+    scroll-behavior:smooth;
+  }
+  main>.page-view.active{display:block!important}
+  main>.page-view#inicio.active{display:flex!important;align-items:center;justify-content:center}
+  main>.page-view#contacto.active{display:flex!important;flex-direction:column;justify-content:center}
+}
+ 
 /* Corrección definitiva de galería en computadora */
 @media screen and (min-width:621px){
  #galeria #galleryGrid{
