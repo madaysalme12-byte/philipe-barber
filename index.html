@@ -500,6 +500,24 @@ Contacto directo por WhatsApp */
   border:0!important;
   box-shadow:none!important;
 }
+
+/* Anulación final de cualquier marco exterior o interior de las fotografías */
+#galeria #galleryGrid > .gallery-tile,
+#galeria #galleryGrid > .gallery-tile.main-photo,
+#galeria #galleryGrid > .gallery-tile.side-photo{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+#galeria #galleryGrid > .gallery-tile::after,
+#galeria #galleryGrid > .gallery-tile.main-photo::after,
+#galeria #galleryGrid > .gallery-tile.side-photo::after{
+  content:none!important;
+  display:none!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
 </style>
 </head>
 <body><div id="app">
