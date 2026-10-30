@@ -709,3 +709,13 @@ try{
 }catch(syncError){console.warn('La sincronización en tiempo real de fotografías no está disponible:',syncError);}
 const waFloat=document.getElementById('whatsappFloat');if(waFloat){const waDigits=String(business.phone||'').replace(/\D/g,'');if(waDigits.length>=10){waFloat.href='https://wa.me/'+waDigits+'?text='+encodeURIComponent('Hola, PHILIPE BARBER. Quisiera información sobre sus servicios y disponibilidad.');}else{waFloat.href='#booking';waFloat.addEventListener('click',e=>{if(!business.phone||String(business.phone).replace(/\D/g,'').length<10){e.preventDefault();document.getElementById('booking').scrollIntoView({behavior:'smooth'});}});}}
 </script></body></html>
+
+
+/* Bienvenida más limpia: sin tijera ni línea dorada detrás del nombre */
+#pbWelcomeIntro .pb-intro-mark {
+  display: none !important;
+}
+#pbWelcomeIntro:after {
+  display: none !important;
+  content: none !important;
+}
