@@ -242,6 +242,16 @@ Contacto directo por WhatsApp */
   #galeria .gallery-grid{grid-template-rows:auto 125px}
 }
 
+
+/* Evitar zoom excesivo y conservar el encuadre completo en escritorio */
+@media(min-width:801px){
+  #galeria .gallery-grid{grid-template-columns:minmax(0,1.35fr) minmax(250px,.78fr);grid-template-rows:repeat(2,minmax(220px,1fr));gap:16px}
+  #galeria .gallery-tile.main-photo{min-height:500px;background-size:contain!important;background-repeat:no-repeat!important;background-position:center center!important;background-color:#090909!important}
+}
+@media(min-width:621px) and (max-width:800px){
+  #galeria .gallery-tile.main-photo{background-size:contain!important;background-repeat:no-repeat!important;background-position:center center!important;background-color:#090909!important}
+}
+
 </style>
 </head>
 <body><div id="app">
