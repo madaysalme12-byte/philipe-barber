@@ -911,6 +911,25 @@ main>.page-view#contacto.active{display:flex!important;flex-direction:column;jus
   main>.page-view#contacto.active{display:flex!important;flex-direction:column;justify-content:center}
 }
  
+/* En celular, permitir desplazamiento vertical del contenido de cada vista.
+   Se conserva intacta la distribución y el encuadre de las fotografías. */
+@media screen and (max-width:800px){
+  main{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  main>.page-view{
+    height:auto!important;
+    min-height:100%!important;
+    overflow:visible!important;
+  }
+  main>.page-view.active{display:block!important}
+  main>.page-view#inicio.active{display:flex!important;align-items:center;justify-content:center}
+  main>.page-view#contacto.active{display:flex!important;flex-direction:column;justify-content:center}
+}
+
 /* Corrección definitiva de galería en computadora */
 @media screen and (min-width:621px){
  #galeria #galleryGrid{
