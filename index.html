@@ -805,6 +805,36 @@ main>.page-view#contacto.active{display:flex!important;flex-direction:column;jus
  .footer{padding:8px 14px;font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){main>.page-view{scroll-behavior:auto}}
+
+/* Escritorio: conservar las tres fotografías de galería en formato vertical */
+@media (min-width: 801px) {
+  #galeria #galleryGrid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-rows: auto !important;
+    height: auto !important;
+    align-items: stretch !important;
+  }
+  #galeria #galleryGrid > .gallery-tile,
+  #galeria #galleryGrid > .gallery-tile.main-photo,
+  #galeria #galleryGrid > .gallery-tile.side-photo {
+    grid-row: 1 !important;
+    aspect-ratio: 3 / 4 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  #galeria #galleryGrid > .gallery-tile.main-photo,
+  #galeria #galleryGrid > .gallery-tile.side-photo:nth-child(2),
+  #galeria #galleryGrid > .gallery-tile.side-photo:nth-child(3) {
+    grid-column: auto !important;
+  }
+  #galeria #galleryGrid > .gallery-tile img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}
 </style>
 </head>
 <body>
