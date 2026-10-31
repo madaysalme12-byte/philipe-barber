@@ -1216,8 +1216,9 @@ document.getElementById('sponsorImageInput')?.addEventListener('change',async e=
 function renderPublicSponsors(){const strip=document.getElementById('partnershipStrip'),box=document.getElementById('partnershipImages');if(!strip||!box)return;const items=photos.filter(p=>{try{return JSON.parse(p.nombre||'').__pbSponsor===1;}catch(e){return false;}});box.innerHTML='';items.forEach(p=>{const img=document.createElement('img');img.src=p.src;img.alt='';img.loading='lazy';box.appendChild(img);});strip.hidden=!items.length;}
 function photoGalleryOrder(p){
  let meta={};try{meta=JSON.parse(p?.nombre||'')||{};}catch(e){}
- const n=Number(meta.position??meta.orden);
- return Number.isFinite(n)&&meta.position!==undefined||Number.isFinite(n)&&meta.orden!==undefined?n:null;
+ const raw=meta.position??meta.orden;
+ if(raw===undefined||raw===null||raw==='')return null;
+ const n=Number(raw);return Number.isFinite(n)?n:null;
 }
 function comparePhotoOrder(a,b){
  const pa=photoGalleryOrder(a),pb=photoGalleryOrder(b);
@@ -1258,7 +1259,7 @@ function renderPhotos(){
  const sideTwo=document.createElement('div');sideTwo.className='gallery-tile side-photo mosaic';
  setRotatingSidePhoto(sideTwo,sidePhotos[1]);gallery.appendChild(sideTwo);
  sideRotationIndex=sideRotationIndex%sidePhotos.length;
- if(sidePhotos.length>2&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+ if(sidePhotos.length>1&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   sideRotationTimer=setInterval(()=>{
    if(document.hidden)return;
    sideRotationIndex=(sideRotationIndex+1)%sidePhotos.length;
