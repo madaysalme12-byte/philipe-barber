@@ -1026,10 +1026,24 @@ main>.page-view{
 }
 
 
-/* Escritorio: aproximadamente 1 cm más de altura en cada foto */
+/* Ajuste definitivo de altura para las tres fotos en computador */
 @media screen and (min-width:801px){
-  #galeria #galleryGrid > .gallery-tile{
+  #galeria #galleryGrid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-template-rows:auto!important;
+    grid-auto-rows:auto!important;
+    height:auto!important;
+    align-items:stretch!important;
+  }
+  #galeria #galleryGrid > .gallery-tile,
+  #galeria #galleryGrid > .gallery-tile.main-photo,
+  #galeria #galleryGrid > .gallery-tile.side-photo{
     aspect-ratio:0.70 / 1!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    width:100%!important;
   }
 }
 
