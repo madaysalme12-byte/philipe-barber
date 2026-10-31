@@ -1015,6 +1015,16 @@ main>.page-view{
   }
 }
 
+
+/* Escritorio: ampliar ligeramente las tres fotos sin modificar móvil */
+@media screen and (min-width:801px){
+  #galeria #galleryGrid{
+    width:100%!important;
+    max-width:1200px!important;
+    gap:clamp(14px,1.7vw,24px)!important;
+  }
+}
+
 </style>
 </head>
 <body>
