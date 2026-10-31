@@ -990,6 +990,31 @@ main>.page-view{
   max-height:none!important;
   overflow:visible!important;
 }
+
+/* Galería: foto principal fija centrada entre las dos fotos laterales */
+@media screen and (min-width:621px){
+  #galeria #galleryGrid > .gallery-tile:nth-child(2){grid-column:1!important;grid-row:1!important}
+  #galeria #galleryGrid > .gallery-tile.main-photo{grid-column:2!important;grid-row:1!important}
+  #galeria #galleryGrid > .gallery-tile:nth-child(3){grid-column:3!important;grid-row:1!important}
+}
+@media screen and (max-width:620px){
+  #galeria #galleryGrid{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-auto-rows:auto!important;
+    gap:14px!important;
+  }
+  #galeria #galleryGrid > .gallery-tile:nth-child(2){grid-column:1!important;grid-row:1!important}
+  #galeria #galleryGrid > .gallery-tile.main-photo{grid-column:1!important;grid-row:2!important}
+  #galeria #galleryGrid > .gallery-tile:nth-child(3){grid-column:1!important;grid-row:3!important}
+  #galeria #galleryGrid > .gallery-tile{
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    aspect-ratio:4/5!important;
+  }
+}
+
 </style>
 </head>
 <body>
