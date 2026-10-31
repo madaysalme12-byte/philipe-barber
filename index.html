@@ -1117,7 +1117,11 @@ document.getElementById('bookingForm').addEventListener('submit',async e=>{
   }
   const {error}=await supabaseClient.from('citas').insert({cliente:data.name,telefono:data.phone,servicio:data.service,fecha:data.date,hora:data.time,notas:data.notes||null,estado:'pendiente'});
   if(error)throw error;
-  status.textContent='¡Tu solicitud quedó registrada! Se abrirá WhatsApp para confirmar los detalles.';
+  let clientSaved=true;
+  const normalizedPhone=String(data.phone||'').replace(/\\D/g,'');
+  const {error:clientError}=await supabaseClient.from('clientes').upsert({nombre:data.name.trim(),telefono:normalizedPhone},{onConflict:'telefono'});
+  if(clientError){clientSaved=false;console.error('La cita se guardó, pero no se pudo guardar el cliente:',clientError);}
+  status.textContent=clientSaved?'¡Tu solicitud quedó registrada! Se abrirá WhatsApp para confirmar los detalles.':'¡Tu cita quedó registrada! No se pudo actualizar la ficha del cliente; se revisará desde administración.';
   const msg=`Hola, PHILIPE BARBER. Quiero solicitar una cita.\\nNombre: ${data.name}\\nMi celular: ${data.phone}\\nServicio: ${data.service}\\nFecha: ${data.date}\\nHora preferida: ${displayTime(data.time)}\\nNota: ${data.notes||'Ninguna'}\\n¿Me confirman mi cita, por favor?`;
   if(phone.length>=10){if(waWindow){waWindow.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);}else{window.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);}}
   else{if(waWindow)waWindow.close();alert('La solicitud quedó guardada, pero falta configurar el número de WhatsApp de la barbería.\\n\\n'+msg);}
